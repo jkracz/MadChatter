@@ -45,11 +45,11 @@ def registerAuth():
 	data = cursor.fetchone()
 	err = None
 	if(data):
-		error = "This user already exists"
+		error = "The user "+username+" already exists"
 		return render_template('register.html', error = err)
 	else:
 		ins = 'INSERT INTO Person (username,password) VALUES(%s, sha1(%s))'
-		cursor.execute(ins, (username, password))
+		cursor.execute(ins, (username, password.encode()))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
@@ -58,13 +58,14 @@ def registerAuth():
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
 	#grabs information from the forms
+
 	username = request.form['username']
 	password = request.form['password']
 
 	#retrieves username and password
 	cursor = conn.cursor()
-	query = 'SELECT * FROM Person WHERE username = %s and password = sha1(%s)'
-	cursor.execute(query, (username, password))
+	query = 'SELECT password FROM Person WHERE username = %s AND password = sha1(%s)'
+	cursor.execute(query, (username, password.encode()))
 	data = cursor.fetchone()
 	cursor.close()
 	error = None
@@ -76,6 +77,12 @@ def loginAuth():
 		#returns an error message to the html page
 		error = 'Invalid login or username'
 		return render_template('login.html', error=error)
+
+
+@app.route('/resetPassword', methods=['POST'])
+def resetPassword():
+	return redirect('/')
+
 
 app.secret_key = 'some key that you will never guess'
 

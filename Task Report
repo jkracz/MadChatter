@@ -31,4 +31,4 @@ $	Implement login
 $ Implement register
 $ Hash passwords
 ^ Implement post
-^ Implement "forgot password" feature
+% Implement "forgot password" feature
