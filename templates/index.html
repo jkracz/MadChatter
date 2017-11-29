@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'layout.html' %}
+{% block body %}
 
-<head>
-
-</head>
-
-<body>
 {% if not message %}
-	<a href="/login">Login</a>
-	<a href="/register">Register</a>
+	<div style="text-align:center;">
+		<h1 style="font-size:100px;">WELCOME TO</h1>
+		<h2 style="font-size:100px;"><u>MADCHATTER</u></h2>
+		<a href="/login"><button type="button">Login</button></a>
+		<a href="/register"><button type="button">Register</button></a>
+	</div>
 {% endif %}
 
 {% if message %}
@@ -28,6 +27,4 @@
 	        <hr>
 	{% endfor %}
 	{% endif %}
-</body>
-
-</html>
+{% endblock %}
