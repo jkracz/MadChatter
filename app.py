@@ -27,15 +27,23 @@ def register():
 
 @app.route("/home.html")
 def home():
-	return render_template('home.html')
+	username = session['username']
+	cursor = conn.cursor();
+	query = 'SELECT timest,file_path,content_name FROM Content WHERE username = %s OR public = 1 ORDER BY timest DESC'
+	cursor.execute(query, (username))
+	data = cursor.fetchall()
+	cursor.close()
+	return render_template('home.html', username=username, posts=data)
 
 #Register new user
 @app.route('/registerAuth', methods=['GET', 'POST'])
 def registerAuth():
-
 	#pull info from registration page
 	username = request.form['username']
 	password = request.form['password']
+	fname = request.form['first_name']
+	lname = request.form['last_name']
+	email = request.form['email']
 
 	cursor = conn.cursor()
 	#Check for existance of new user
@@ -48,8 +56,8 @@ def registerAuth():
 		error = "The user "+username+" already exists"
 		return render_template('register.html', error = err)
 	else:
-		ins = 'INSERT INTO Person (username,password) VALUES(%s, sha1(%s))'
-		cursor.execute(ins, (username, password.encode()))
+		ins = 'INSERT INTO Person (username,password,first_name,last_name,email) VALUES(%s, sha1(%s), %s, %s, %s)'
+		cursor.execute(ins, (username, password.encode(), fname, lname, email))
 		conn.commit()
 		cursor.close()
 		return render_template('index.html')
@@ -83,6 +91,26 @@ def loginAuth():
 def resetPassword():
 	return redirect('/')
 
+
+@app.route('/post', methods=['GET', 'POST'])
+def post():
+	username = session['username']
+	cursor = conn.cursor();
+	content = request.form['content']
+	description = request.form['description']
+	public = request.form['makePublic']
+	if(public != '1'):
+		public = '0'
+	query = 'INSERT INTO Content (username,file_path,content_name,public) VALUES(%s, %s, %s, %s)'
+	cursor.execute(query, (username,content,description,public))
+	conn.commit()
+	cursor.close()
+	return redirect(url_for('home'))
+
+@app.route('/logout')
+def logout():
+	session.pop('username')
+	return redirect('/')
 
 app.secret_key = 'some key that you will never guess'
 

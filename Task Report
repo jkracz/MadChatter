@@ -10,9 +10,9 @@ secondary task - something that should be completed eventually, but all other ta
 
 
 Minah:
-^ Add "forgot password button to login page"
 ^ Add "comment" option & functionality for posts (work with Singwa on back end)
 ^ Add "add friend" option & functionality for posts (work with Singwa on back end)
+
 ^	Use CSS & JS to make index.html more appeling (secondary task)
 ^	Use CSS & JS to make register.html more appeling (secondary task)
 ^	Use CSS & JS to make login.html more appeling (secondary task)
@@ -20,15 +20,16 @@ Minah:
 
 
 Singwa:
-^ Implement logout in app.py
-^ Implement home in app.py
 ^ Implement comment in app.py (work with Minah on front-end solution)
 ^ Implement "add friend" feature (work with Minah on front-end solution)
 
 
 Joe:
 $	Implement login
+$ Add "forgot password button to login page"
 $ Implement register
 $ Hash passwords
-^ Implement post
+$ Implement logout in app.py
+$ Implement post
+$ Implement home in app.py
 % Implement "forgot password" feature
