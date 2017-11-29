@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
 from hashlib import sha1
+import django
 
 app = Flask(__name__)
 
