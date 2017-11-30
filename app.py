@@ -1,15 +1,14 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
 from hashlib import sha1
-import django
 
 app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=8889,
+	port=3306,
 	user='root',
-	password='root',
+	password='',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -30,7 +29,7 @@ def register():
 def home():
 	username = session['username']
 	cursor = conn.cursor();
-	query = 'SELECT timest,file_path,content_name FROM Content WHERE username = %s OR public = 1 ORDER BY timest DESC'
+	query = 'SELECT timest,file_path,content_name FROM content WHERE username = %s OR public = 1 ORDER BY timest DESC'
 	cursor.execute(query, (username))
 	data = cursor.fetchall()
 	cursor.close()
@@ -48,7 +47,7 @@ def registerAuth():
 
 	cursor = conn.cursor()
 	#Check for existance of new user
-	query = 'SELECT * FROM Person WHERE username = %s'
+	query = 'SELECT * FROM person WHERE username = %s'
 	cursor.execute(query, (username))
 	print ("existence check complete")
 	data = cursor.fetchone()
@@ -57,7 +56,7 @@ def registerAuth():
 		error = "The user "+username+" already exists"
 		return render_template('register.html', error = err)
 	else:
-		ins = 'INSERT INTO Person (username,password,first_name,last_name,email) VALUES(%s, sha1(%s), %s, %s, %s)'
+		ins = 'INSERT INTO person (username,password,first_name,last_name,email) VALUES(%s, sha1(%s), %s, %s, %s)'
 		cursor.execute(ins, (username, password.encode(), fname, lname, email))
 		conn.commit()
 		cursor.close()
@@ -73,7 +72,7 @@ def loginAuth():
 
 	#retrieves username and password
 	cursor = conn.cursor()
-	query = 'SELECT password FROM Person WHERE username = %s AND password = sha1(%s)'
+	query = 'SELECT password FROM person WHERE username = %s AND password = sha1(%s)'
 	cursor.execute(query, (username, password.encode()))
 	data = cursor.fetchone()
 	cursor.close()
@@ -102,7 +101,7 @@ def post():
 	public = request.form['makePublic']
 	if(public != '1'):
 		public = '0'
-	query = 'INSERT INTO Content (username,file_path,content_name,public) VALUES(%s, %s, %s, %s)'
+	query = 'INSERT INTO content (username,file_path,content_name,public) VALUES(%s, %s, %s, %s)'
 	cursor.execute(query, (username,content,description,public))
 	conn.commit()
 	cursor.close()
