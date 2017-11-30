@@ -112,10 +112,18 @@ def logout():
 	session.pop('username')
 	return redirect('/')
 
+#view single posts after clicking
+@app.route('/single_post', methods=['GET'])
+def single_post():
+    content_title = request.values.get('line.content_name')
+    cursor = conn.cursor()
+    query='SELECT content_name, file_path, timest, username FROM content WHERE content_name = %s'
+    cursor.execute(query, (cont_title))
+    data=cursor.fetchAll()
+    cursor.close()
+    return render_template('post.html', content_name=content_name, file_path=file_path, timest=timest, username=username)
+
 app.secret_key = 'some key that you will never guess'
 
 if __name__ == "__main__":
 		app.run()
-
-
-
