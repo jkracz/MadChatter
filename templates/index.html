@@ -1,33 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-</head>
-
-<body>
-{% if not message %}
-	<a href="/login">Login</a>
-	<a href="/register">Register</a>
-{% endif %}
-
-{% if message %}
-	<a href="/logout">Logout</a>
-	<a href="/remove_account">Remove Account</a>
-	<p class="message">You are logged in {{message}}. You have {{num}} follower(s)</p> </br>
-	<a href="/tweets">View your tweets</a> </br>
-	<a href="/find_people">Find people to follow</a> </br>
-	<a href="/unfollow">Unfollow someone</a> </br>
-	<a href="/view_followed">View people you have followed</a> </br>
-	</br>
-
-        <h4>15 most recent tweets from you and your followers </h4> </br>
-
-	{% for line in tweets%}
-	        <p>{{line}}</p>
-	        <hr>
-	{% endfor %}
-	{% endif %}
-</body>
-
-</html>
+<html>
+     <head>
+         <title>Index Page</title>
+         <style>
+             #header{
+                 text-align:center;
+             }
+             #heading{
+                 font-size: 70px;
+                 color:darkgreen;
+             }
+             #body{
+                 font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+             }
+             .buttons{
+                 background-color:red;
+                 border-color:darkred;
+                 color:white;
+                 padding:15px 32px;
+             }
+         </style>
+     </head>
+     <body id="body">
+         <div id="header">
+         <h2 id="heading">Mad Chatter</h2>
+    {% if not message %}
+ 		<a href="/login"><button type="button" class="buttons">Login</button></a>
+ 		<a href="/register"><button type="button" class="buttons">Register</button></a>
+    {% endif %}
+ 	</div>
+  
+  {% if message %}
+  	<a href="/logout">Logout</a>
+       </body>
+ 	
+</html> 
