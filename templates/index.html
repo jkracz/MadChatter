@@ -1,14 +1,33 @@
-{% extends 'layout.html' %}
-{% block body %}
-
+<html>
+    <head>
+        <title>Index Page</title>
+        <style>
+            #header{
+                text-align:center;
+            }
+            #heading{
+                font-size: 70px;
+                color:darkgreen;
+            }
+            #body{
+                font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+            }
+            .buttons{
+                background-color:red;
+                border-color:darkred;
+                color:white;
+                padding:15px 32px;
+            }
+        </style>
+    </head>
+    <body id="body">
+        <div id="header">
+        <h2 id="heading">Mad Chatter</h2>
 {% if not message %}
-	<div style="text-align:center;">
-		<h1 style="font-size:100px;">WELCOME TO</h1>
-		<h2 style="font-size:100px;"><u>MADCHATTER</u></h2>
-		<a href="/login"><button type="button">Login</button></a>
-		<a href="/register"><button type="button">Register</button></a>
-	</div>
+		<a href="/login"><button type="button" class="buttons">Login</button></a>
+		<a href="/register"><button type="button" class="buttons">Register</button></a>
 {% endif %}
+	</div>
 
 {% if message %}
 	<a href="/logout">Logout</a>
@@ -27,4 +46,6 @@
 	        <hr>
 	{% endfor %}
 	{% endif %}
-{% endblock %}
+    </body>
+	
+</html>
