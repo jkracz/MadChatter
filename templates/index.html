@@ -1,33 +1,15 @@
-<html>
-    <head>
-        <title>Index Page</title>
-        <style>
-            #header{
-                text-align:center;
-            }
-            #heading{
-                font-size: 70px;
-                color:darkgreen;
-            }
-            #body{
-                font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-            }
-            .buttons{
-                background-color:red;
-                border-color:darkred;
-                color:white;
-                padding:15px 32px;
-            }
-        </style>
-    </head>
-    <body id="body">
-        <div id="header">
-        <h2 id="heading">Mad Chatter</h2>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+</head>
+
+<body>
 {% if not message %}
-		<a href="/login"><button type="button" class="buttons">Login</button></a>
-		<a href="/register"><button type="button" class="buttons">Register</button></a>
+	<a href="/login">Login</a>
+	<a href="/register">Register</a>
 {% endif %}
-	</div>
 
 {% if message %}
 	<a href="/logout">Logout</a>
@@ -46,6 +28,6 @@
 	        <hr>
 	{% endfor %}
 	{% endif %}
-    </body>
-	
+</body>
+
 </html>
