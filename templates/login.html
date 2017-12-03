@@ -1,15 +1,15 @@
 <html lang="en">
 <head>
     <title>Log In</title>
-    <link rel="stylesheet" href="css/pagestyle.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ind_log_reg_res.css')}}">
 </head>
 <body>
     <header role="banner">
         <h2>Mad Chatter</h2>
     </header>
     <form action="/loginAuth" method="POST">
-	   <input type="text" name = "username" placeholder="username" required/> </br>
-	   <input type="password" name = "password" placeholder="password" required/> </br>
+        <p>Username: <input type="text" name = "username" placeholder="username" required/></p>
+        <p>Password: <input type="password" name = "password" placeholder="password" required/></p><br>
 	   <input type="submit" value = Login class="buttons"/>
 	{% if error %}
 		<p class="error"><strong>Error:</strong> {{error}}</p>
