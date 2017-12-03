@@ -1,25 +1,12 @@
 <html>
 <head>
     <title>Home</title>
-    <style>
-        #heading{
-            font-size: 70px;
-            color:darkgreen;
-            text-align:center;
-        }
-        #body{
-            font-family:"Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-        }
-        .buttons{
-            background-color:red;
-            border-color:darkred;
-            color:white;
-            padding:15px 32px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/pagestyle.css">
 </head>
-<body id="body">
-    <h2 id="heading">Mad Chatter</h2>
+<body>
+    <header role="banner">
+        <h2>Mad Chatter</h2>
+    </header>
 <form action="/post" method="POST">
 	<h1>Welcome {{username}}</h1>
 	<h2>Share something with us!</h2>
