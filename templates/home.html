@@ -7,15 +7,15 @@
     <header role="banner">
         <h2>Mad Chatter</h2>
     </header>
-<form action="/post" method="POST">
-	<h1>Welcome {{username}}</h1>
-	<h2>Share something with us!</h2>
-    <input type="text" name = "description" placeholder="Title" required/> </br>
-	<input type="url" name = "content" placeholder="Link" required/> </br><br>
-	<input type="checkbox" id="makePublic" name= "makePublic" value="1" placeholder="Public"/>
-	<label for="makePublic">Make it public</label><br><br>
-	<input type="submit" value = Post class="buttons"/>
-</form>
+    <form action="/post" method="POST">
+	   <h1>Welcome {{username}}</h1>
+	   <h2>Share something with us!</h2>
+        <input type="text" name = "description" placeholder="Title" required/> </br>
+        <input type="url" name = "content" placeholder="Link" required/> <br><br/>
+	    <input type="checkbox" id="makePublic" name= "makePublic" value="1" placeholder="Public"/>
+	    <label for="makePublic">Make it public</label><br><br/>
+	    <input type="submit" value = Post class="buttons"/>
+    </form>
 
 <style type="text/css">
 	table, th, td{
