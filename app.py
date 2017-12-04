@@ -112,6 +112,18 @@ def logout():
 	session.pop('username')
 	return redirect('/')
 
+@app.route('/profile') #MUST IMPLEMENT (1. my profile, 2. other profiles)
+def profile():
+    return render_template('profile.html')
+
+@app.route('/notif') #MUST IMPLEMENT
+def notif():
+    return render_template('notif.html')
+
+@app.route('/home_nav') #MAY NEED TO IMPLEMENT, NOT SURE
+def home_nav():
+    return redirect(url_for('home'))
+
 app.secret_key = 'some key that you will never guess'
 
 if __name__ == "__main__":

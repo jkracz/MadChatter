@@ -12,10 +12,10 @@ secondary task - something that should be completed eventually, but all other ta
 Minah:
 ^ Add "comment" option & functionality for posts (work with Singwa on back end)
 ^ Add "add friend" option & functionality for posts (work with Singwa on back end)
-^ Create Notification (tags) page
-^ Create user profile page
+% Create Notification (tags) page
+% Create user profile page
 ^ Create change password page
-^ Create navigation bar
+$ Create navigation bar
 ^ Add front end for "add friend" to home page
 ^ Add front end for "create friend group" to home page
 
