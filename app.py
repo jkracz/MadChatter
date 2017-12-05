@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
 from hashlib import sha1
+from functools import wraps
+from socket import *
+import email_module as email
 
 app = Flask(__name__)
 
@@ -12,6 +15,16 @@ conn = pymysql.connect(host='localhost',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
+
+#wrap around functions that are only available to logged in users
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            return render_template('login.html')
+    return wrap
 
 @app.route("/")
 def main():
@@ -26,6 +39,7 @@ def register():
 	return render_template('register.html')
 
 @app.route("/home.html")
+@login_required
 def home():
 	username = session['username']
 	cursor = conn.cursor();
@@ -79,7 +93,9 @@ def loginAuth():
 	error = None
 	if(data):
 		#creates a session for the the user
+                #session['logged_in'] tracks if user =logged in
 		session['username'] = username
+		session['logged_in'] = True
 		return redirect(url_for('home'))
 	else:
 		#returns an error message to the html page
@@ -89,10 +105,33 @@ def loginAuth():
 
 @app.route('/resetPassword', methods=['POST'])
 def resetPassword():
-	return redirect('/')
-
-
+	##incomplete
+        return redirect('reset_password.html')
+
+#when user resets password, function checks for associated account and mail password
+def checkAccount(username, email):
+        inst = 'SELECT * FROM person WHERE username = %s AND email = %s'
+        cursor = conn.cursor()
+        cursor.execute(inst, (username, email))
+        data = cursor.fetchone()
+        cursor.close()
+        #if account exists, send email
+        if data:
+                email = data['email']
+                new_pw = '123123123'
+                inst = 'UPDATE person SET password = sha1(%s) WHERE username = %s AND email = %s'
+                cursor = conn.cursor()
+                cursor.execute(inst, (new_pw, username, email))
+                conn.commit()
+                cursor.close()
+                email.mailPassword(new_pw, email)
+                return 'Password reset was successful, new password has been mailed to your email!'
+        #if account doesn't exist, return 0
+        else:
+                return 'User cannot be found'
+        
 @app.route('/post', methods=['GET', 'POST'])
+@login_required
 def post():
 	username = session['username']
 	cursor = conn.cursor();
@@ -107,16 +146,49 @@ def post():
 	cursor.close()
 	return redirect(url_for('home'))
 
+@app.route('/view', methods=['GET'])
+@login_required
+def view():
+        username = session['username']
+        inst = "SELECT * FROM content WHERE content.username = %s"
+        inst2 = "SELECT * FROM content WHERE content.public = 1"
+        cursor = conn.cursor()
+        cursor.execute(inst, (username))
+        user_contents = cursor.fetchall()
+        cursor.close()
+        ##
+        cursor = conn.cursor()
+        cursor.execute(inst2)
+        avail_contents = cursor.fetchall()
+        cursor.close()
+        return render_template('view.html', user_contents=user_contents, avail_contents=avail_contents)
+
+@app.route('/comment/<content_id>', methods = ['GET', 'POST'])
+##incomplete
+def comment(content_id): #need to divide into 2 html files
+        username = session['username']
+        comment = request.form['comment']
+        cursor = conn.cursor();
+        inst = 'INSERT INTO TABLE comment(id, username, comment_text) VALUES (%s, %s, %s)'
+        cursor.execute(inst, (content_id, username, comment))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('/view'))
+
+
 @app.route('/logout')
+@login_required
 def logout():
 	session.pop('username')
 	return redirect('/')
 
 @app.route('/profile') #MUST IMPLEMENT (1. my profile, 2. other profiles)
+@login_required
 def profile():
     return render_template('profile.html')
 
 @app.route('/notif') #MUST IMPLEMENT
+@login_required
 def notif():
     return render_template('notif.html')
 
@@ -127,7 +199,7 @@ def home_nav():
 app.secret_key = 'some key that you will never guess'
 
 if __name__ == "__main__":
-		app.run()
+		app.run(debug=True)
 
 
 
