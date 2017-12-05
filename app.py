@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
 from hashlib import sha1
@@ -153,11 +152,11 @@ def post():
 @login_required
 def view(item_id):
         inst = "SELECT * FROM content WHERE content.id = %s"
-        cursor = conn.cursor()
+        cursor = conn.cursor();
         cursor.execute(inst, (item_id))
-        view_item = cursor.fetchone()
+        data = cursor.fetchall()
         cursor.close()
-        return render_template('view.html', view_item = view_item)
+        return render_template('view.html', view_item = data)
 
 @app.route('/comment/<content_id>', methods = ['GET', 'POST'])
 ##incomplete
@@ -199,7 +198,6 @@ if __name__ == "__main__":
 
 
 
-=======
 from flask import Flask, render_template, request, redirect, session, url_for
 import pymysql.cursors
 from hashlib import sha1
@@ -339,4 +337,3 @@ if __name__ == "__main__":
 
 
 
->>>>>>> a4bd6687f0d9d57060fe3653f945ea6840dc1468
