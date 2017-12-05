@@ -46,5 +46,5 @@ $ Implement post
 $ Implement home in app.py
 ^ Implement tag requests
 ^ implement tagging
-^ implement user profile stuff
+% implement user profile stuff
 ^ Update SQL tables (add istemppass to user, ON DELETE CASCADE)

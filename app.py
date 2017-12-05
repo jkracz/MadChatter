@@ -25,7 +25,7 @@ def login():
 def register():
 	return render_template('register.html')
 
-@app.route("/home.html")
+@app.route("/home")
 def home():
 	username = session['username']
 	cursor = conn.cursor();
@@ -98,9 +98,9 @@ def post():
 	cursor = conn.cursor();
 	content = request.form['content']
 	description = request.form['description']
-	public = request.form['makePublic']
-	if(public != '1'):
-		public = '0'
+	public = '0'
+	if(request.form.get('makePublic')):
+		public = '1'
 	query = 'INSERT INTO content (username,file_path,content_name,public) VALUES(%s, %s, %s, %s)'
 	cursor.execute(query, (username,content,description,public))
 	conn.commit()
@@ -112,17 +112,23 @@ def logout():
 	session.pop('username')
 	return redirect('/')
 
-@app.route('/profile') #MUST IMPLEMENT (1. my profile, 2. other profiles)
-def profile():
-    return render_template('profile.html')
+@app.route('/myProfile') #MUST IMPLEMENT (1. my profile, 2. other profiles)
+def myProfile():
+	username = session['username']
+	cur = conn.cursor();
+	friendsQuery = 'SELECT m.username, p.first_name, p.last_name FROM Member AS m\
+									JOIN Person AS p ON (m.username = p.username)\
+									WHERE (group_name,username_creator) IN (SELECT group_name,username_creator\
+											                                     FROM Member\
+											                                     WHERE username = %s)'
+	cur.execute(friendsQuery, (username))
+	friendsList = cur.fetchall()
+	cur.close()
+	return render_template('profile.html', user=username,friends=friendsList)
 
 @app.route('/notif') #MUST IMPLEMENT
 def notif():
     return render_template('notif.html')
-
-@app.route('/home_nav') #MAY NEED TO IMPLEMENT, NOT SURE
-def home_nav():
-    return redirect(url_for('home'))
 
 app.secret_key = 'some key that you will never guess'
 
