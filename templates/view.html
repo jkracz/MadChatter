@@ -2,35 +2,21 @@
 <head>
 </head>
 <body>
-	<h1>Your items</h1>
+	<h1>Viewing</h1>
 	<table>
 		<tr>
 			<th>Content ID</th>
 			<th>File Path</th>
 			<th>Time</th>
+			<th>Comment</th>
+			<th>Tag</th>
 		</tr>
-	{% for content in user_contents %}
+	{% for info in view_item %}
 		<tr>
-			<td>{{content.id}}</td>
-			<td>{{content.file_path}}</td>
-			<td>{{content.timest}}</td>
-			<td><a href="/delete/{{user_contents.id}}">delete</a></td>
-		</tr>
-	{% endfor %}
-	</table>
-	<h2>Available items</h2>
-	<table>
-		<tr>
-			<th>Content ID</th>
-			<th>File Path</th>
-			<th>Time</th>
-		</tr>
-	{% for content in avail_contents %}
-		<tr>
-			<td>{{content.id}}</td>
-			<td>{{content.file_path}}</td>
-			<td>{{content.timest}}</td>
-			<td><a href="/comment/{{content.id}}">comment</a></td>
+			<td>{{info.id}}</td>
+			<td>{{info.file_path}}</td>
+			<td>{{info.timest}}</td>
+			<td>{{info.comment_text}}</td>
 		</tr>
 	{% endfor %}
 </body>

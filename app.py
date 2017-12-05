@@ -9,9 +9,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=8889,
+	port=3306,
 	user='root',
-	password='root',
+	password='',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -23,7 +23,7 @@ def login_required(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            return render_template('login.html')
+            return redirect(url_for('login'))
     return wrap
 
 @app.route("/")
@@ -38,12 +38,12 @@ def login():
 def register():
 	return render_template('register.html')
 
-@app.route("/home.html")
+@app.route("/home")
 @login_required
 def home():
 	username = session['username']
 	cursor = conn.cursor();
-	query = 'SELECT timest,file_path,content_name FROM content WHERE username = %s OR public = 1 ORDER BY timest DESC'
+	query = 'SELECT id, timest, file_path, content_name FROM content WHERE username = %s OR public = 1 ORDER BY timest DESC'
 	cursor.execute(query, (username))
 	data = cursor.fetchall()
 	cursor.close()
@@ -107,7 +107,8 @@ def loginAuth():
 def resetPassword():
 	##incomplete
         return redirect('reset_password.html')
-
+
+
 #when user resets password, function checks for associated account and mail password
 def checkAccount(username, email):
         inst = 'SELECT * FROM person WHERE username = %s AND email = %s'
@@ -133,6 +134,7 @@ def checkAccount(username, email):
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post():
+       
 	username = session['username']
 	cursor = conn.cursor();
 	content = request.form['content']
@@ -146,22 +148,15 @@ def post():
 	cursor.close()
 	return redirect(url_for('home'))
 
-@app.route('/view', methods=['GET'])
+@app.route('/view/<item_id>/', methods=['GET'])
 @login_required
-def view():
-        username = session['username']
-        inst = "SELECT * FROM content WHERE content.username = %s"
-        inst2 = "SELECT * FROM content WHERE content.public = 1"
+def view(item_id):
+        inst = "SELECT * FROM content WHERE content.id = %s"
         cursor = conn.cursor()
-        cursor.execute(inst, (username))
-        user_contents = cursor.fetchall()
+        cursor.execute(inst, (item_id))
+        view_item = cursor.fetchone()
         cursor.close()
-        ##
-        cursor = conn.cursor()
-        cursor.execute(inst2)
-        avail_contents = cursor.fetchall()
-        cursor.close()
-        return render_template('view.html', user_contents=user_contents, avail_contents=avail_contents)
+        return render_template('view.html', view_item = view_item)
 
 @app.route('/comment/<content_id>', methods = ['GET', 'POST'])
 ##incomplete
