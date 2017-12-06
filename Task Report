@@ -12,16 +12,25 @@ secondary task - something that should be completed eventually, but all other ta
 Minah:
 ^ Add "comment" option & functionality for posts (work with Singwa on back end)
 ^ Add "add friend" option & functionality for posts (work with Singwa on back end)
+% Create Notification (tags) page
+% Create user profile page
+^ Create change password page
+$ Create navigation bar
+^ Add front end for "add friend" to home page
+^ Add front end for "create friend group" to home page
 
-$	Use CSS & JS to make index.html more appeling (secondary task)
-$	Use CSS & JS to make register.html more appeling (secondary task)
-^	Use CSS & JS to make login.html more appeling (secondary task)
+%	Use CSS & JS to make index.html more appeling (secondary task)
+%	Use CSS & JS to make register.html more appeling (secondary task)
+%	Use CSS & JS to make login.html more appeling (secondary task)
 %	Use CSS & JS to make home.html more appeling (secondary task)
 
 
 Singwa:
-^ Implement comment in app.py (work with Minah on front-end solution)
-^ Implement "add friend" feature (work with Minah on front-end solution)
+^ Implement share via email
+^ Implement delete content item
+^ Implement create group
+^ Implement add friend (member)
+
 
 
 Joe:
@@ -32,4 +41,7 @@ $ Hash passwords
 $ Implement logout in app.py
 $ Implement post
 $ Implement home in app.py
-% Implement "forgot password" feature
+^ Implement tag requests
+^ implement tagging
+% implement user profile stuff
+^ Update SQL tables (add istemppass to user, ON DELETE CASCADE)
