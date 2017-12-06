@@ -1,6 +1,11 @@
 <html>
-	<form action="/comment" method="POST">
-	    <input type="text" comment = "comment" placeholder="Comment" required/> </br>
+<head>
+</head>
+<body>
+	<form action="/post_comment" method="POST">
+	    <input type="text" name = "comment" placeholder="Comment" required/> </br>
+	    <input type="hidden" name = "content_id" value = "{{content_id}}"/>
 		<input type="submit" value = Comment class="buttons"/>
 	</form>
+</body>
 </html>

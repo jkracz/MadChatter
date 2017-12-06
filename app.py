@@ -3,6 +3,7 @@ import pymysql.cursors
 from hashlib import sha1
 from functools import wraps
 from socket import *
+from datetime import datetime
 import email_module as email
 
 app = Flask(__name__)
@@ -32,7 +33,9 @@ def main():
 
 @app.route("/login")
 def login():
-	return render_template('login.html')
+    #if 'logged_in' in session:
+        #return redirect(url_for('home'))
+    return render_template('login.html')
 
 @app.route("/register")
 def register():
@@ -148,7 +151,7 @@ def post():
 	cursor.close()
 	return redirect(url_for('home'))
 
-@app.route('/view/<item_id>/', methods=['GET'])
+@app.route('/view/<int:item_id>/', methods=['GET'])
 @login_required
 def view(item_id):
         inst = "SELECT * FROM content WHERE content.id = %s"
@@ -158,23 +161,31 @@ def view(item_id):
         cursor.close()
         return render_template('view.html', view_item = data)
 
-@app.route('/comment/<content_id>', methods = ['GET', 'POST'])
-##incomplete
-def comment(content_id): #need to divide into 2 html files
-        username = session['username']
-        comment = request.form['comment']
-        cursor = conn.cursor();
-        inst = 'INSERT INTO TABLE comment(id, username, comment_text) VALUES (%s, %s, %s)'
-        cursor.execute(inst, (content_id, username, comment))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('/view'))
+@app.route('/comment/<int:item_id>', methods=['GET', 'POST'])
+@login_required
+def comment(item_id):
+    return render_template('comment.html', content_id = item_id)
 
+@app.route('/post_comment', methods=['POST'])
+def post_comment():
+    if request.method == 'POST':
+        content_id = request.form['content_id']
+        comment = request.form['comment']
+        username = session['username']
+        time = str(datetime.now())
+
+        inst = "INSERT INTO comment(id, username, timest, comment_text) VALUES (%s, %s, %s, %s)" 
+        cursor = conn.cursor();
+        cursor.execute(inst, (content_id, username, time, comment))
+        conn.commit()
+        cursor.close()
+        return redirect(url_for('home'))
 
 @app.route('/logout')
 @login_required
 def logout():
 	session.pop('username')
+	session.clear()
 	return redirect('/')
 
 @app.route('/profile') #MUST IMPLEMENT NOT MY profiles
@@ -182,6 +193,8 @@ def logout():
 def profile():
     return render_template('profile.html')
 
+<<<<<<< HEAD
+=======
 @app.route('/myProfile')
 def myProfile():
 	username = session['username']
@@ -196,13 +209,26 @@ def myProfile():
 	cur.close()
 	return render_template('profile.html', user=username,friends=friendsList)
 
+>>>>>>> 70707c70adaf61588f0378713f0522517df9610b
 @app.route('/notif') #MUST IMPLEMENT
 @login_required
 def notif():
     return render_template('notif.html')
 
+<<<<<<< HEAD
+@app.route('/home_nav') #MAY NEED TO IMPLEMENT, NOT SURE
+def home_nav():
+    return redirect(url_for('home'))
+
+=======
+>>>>>>> 70707c70adaf61588f0378713f0522517df9610b
 app.secret_key = 'some key that you will never guess'
 
 if __name__ == "__main__":
 		app.run(debug=True)
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 70707c70adaf61588f0378713f0522517df9610b
