@@ -10,9 +10,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=3306,
+	port=8889,
 	user='root',
-	password='',
+	password='root',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -133,11 +133,11 @@ def checkAccount(username, email):
         #if account doesn't exist, return 0
         else:
                 return 'User cannot be found'
-        
+
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post():
-       
+
 	username = session['username']
 	cursor = conn.cursor();
 	content = request.form['content']
@@ -174,7 +174,7 @@ def post_comment():
         username = session['username']
         time = str(datetime.now())
 
-        inst = "INSERT INTO comment(id, username, timest, comment_text) VALUES (%s, %s, %s, %s)" 
+        inst = "INSERT INTO comment(id, username, timest, comment_text) VALUES (%s, %s, %s, %s)"
         cursor = conn.cursor();
         cursor.execute(inst, (content_id, username, time, comment))
         conn.commit()
@@ -188,16 +188,9 @@ def logout():
 	session.clear()
 	return redirect('/')
 
-@app.route('/profile') #MUST IMPLEMENT NOT MY profiles
-@login_required
-def profile():
-    return render_template('profile.html')
 
-<<<<<<< HEAD
-=======
-@app.route('/myProfile')
-def myProfile():
-	username = session['username']
+@app.route('/profile/<username>')
+def myProfile(username):
 	cur = conn.cursor();
 	friendsQuery = 'SELECT m.username, p.first_name, p.last_name FROM Member AS m\
 									JOIN Person AS p ON (m.username = p.username)\
@@ -206,29 +199,34 @@ def myProfile():
 											                                     WHERE username = %s)'
 	cur.execute(friendsQuery, (username))
 	friendsList = cur.fetchall()
+	groupQuery = 'SELECT group_name,\
+								CASE\
+									WHEN username_creator = %s THEN "Owner"\
+									ELSE "Member"\
+								END AS status\
+								FROM Member\
+								WHERE username = %s'
+	cur.execute(groupQuery, (username,username))
+	groupList = cur.fetchall()
+	postQuery = 'SELECT * FROM Content WHERE username = %s ORDER BY timest DESC'
+	cur.execute(postQuery, (username))
+	userPosts = cur.fetchall()
 	cur.close()
-	return render_template('profile.html', user=username,friends=friendsList)
+	return render_template('profile.html', username=username,friends=friendsList, groups=groupList, posts=userPosts)
 
->>>>>>> 70707c70adaf61588f0378713f0522517df9610b
 @app.route('/notif') #MUST IMPLEMENT
 @login_required
 def notif():
-    return render_template('notif.html')
+    return render_template('notif.html', username=session['username'])
 
-<<<<<<< HEAD
 @app.route('/home_nav') #MAY NEED TO IMPLEMENT, NOT SURE
 def home_nav():
     return redirect(url_for('home'))
 
-=======
->>>>>>> 70707c70adaf61588f0378713f0522517df9610b
+
 app.secret_key = 'some key that you will never guess'
 
 if __name__ == "__main__":
 		app.run(debug=True)
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 70707c70adaf61588f0378713f0522517df9610b
