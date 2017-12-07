@@ -250,9 +250,6 @@ def denyTag(item_id):
 @app.route('/notif') #MUST IMPLEMENT
 @login_required
 def notif():
-<<<<<<< HEAD
-    return render_template('notif.html', username=session['username'])
-=======
 	username = session['username']
 	tagsQuery = 'SELECT t.id, file_path, username_tagger FROM Content AS c\
 								JOIN Tag AS t ON (c.id = t.id) WHERE username_taggee=%s AND status = 0 ORDER BY t.timest DESC'
@@ -261,7 +258,6 @@ def notif():
 	pendingTags = cur.fetchall()
 	cur.close()
 	return render_template('notif.html', username=username,pendingTags=pendingTags)
->>>>>>> 2512cab2edd7cc4a06de5e8269004b9b93149456
 
 
 app.secret_key = 'some key that you will never guess'
