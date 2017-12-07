@@ -1,8 +1,8 @@
 from socket import *
 import ssl #for SSL connection required by Gmail
 
-def mailPassword(new_pw, email):
-        msg = '\r\n Your temporary password is: %s!' % new_pw
+def send_email(message, email):
+        msg = '\r\n %s' % message
         endmsg ='\r\n.\r\n'
         # Choose a mail server (e.g. Google mail server) and call it mailserver
         mailServer = 'smtp.gmail.com'
