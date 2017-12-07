@@ -137,7 +137,6 @@ def checkAccount(username, email):
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post():
-
 	username = session['username']
 	cursor = conn.cursor();
 	content = request.form['content']
@@ -190,7 +189,7 @@ def logout():
 
 
 @app.route('/profile/<username>')
-def myProfile(username):
+def profile(username):
 	cur = conn.cursor();
 	friendsQuery = 'SELECT m.username, p.first_name, p.last_name FROM Member AS m\
 									JOIN Person AS p ON (m.username = p.username)\
@@ -217,10 +216,52 @@ def myProfile(username):
 	cur.close()
 	return render_template('profile.html', username=username, user=personInfo, friends=friendsList, groups=groupList, posts=userPosts)
 
+@app.route('/tag/<int:item_id>', methods=['POST'])
+def tag(item_id):
+	tagger = session['username']
+	taggee = request.form['taggee']
+	addTag = 'INSERT INTO Tag (id,username_tagger,username_taggee) VALUES (%s, %s, %s)'
+	cur = conn.cursor();
+	cur.execute(addTag, (item_id,tagger,taggee))
+	conn.commit()
+	cur.close()
+	return redirect(url_for('home'))
+
+@app.route('/acceptTag/<int:item_id>', methods=['POST'])
+def acceptTag(item_id):
+	username = session['username']
+	acceptQuery = 'UPDATE Tag SET status = 1 WHERE id = %s AND username_taggee = %s AND status = 0'
+	cur = conn.cursor()
+	cur.execute(acceptQuery, (item_id,username))
+	conn.commit()
+	cur.close()
+	return redirect(url_for('notif'))
+
+@app.route('/denyTag/<int:item_id>', methods=['POST'])
+def denyTag(item_id):
+	username = session['username']
+	denyQuery = 'DELETE FROM Tag WHERE id = %s AND username_taggee = %s AND status = 0'
+	cur = conn.cursor()
+	cur.execute(denyQuery, (item_id,username))
+	conn.commit()
+	cur.close()
+	return redirect(url_for('notif'))
+
 @app.route('/notif') #MUST IMPLEMENT
 @login_required
 def notif():
+<<<<<<< HEAD
     return render_template('notif.html', username=session['username'])
+=======
+	username = session['username']
+	tagsQuery = 'SELECT t.id, file_path, username_tagger FROM Content AS c\
+								JOIN Tag AS t ON (c.id = t.id) WHERE username_taggee=%s AND status = 0 ORDER BY t.timest DESC'
+	cur = conn.cursor()
+	cur.execute(tagsQuery, (username))
+	pendingTags = cur.fetchall()
+	cur.close()
+	return render_template('notif.html', username=username,pendingTags=pendingTags)
+>>>>>>> 2512cab2edd7cc4a06de5e8269004b9b93149456
 
 
 app.secret_key = 'some key that you will never guess'

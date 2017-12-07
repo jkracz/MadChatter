@@ -1,11 +1,11 @@
-CREATE DATABASE MadChatter
+CREATE DATABASE MadChatter;
 
 CREATE TABLE Person(
 	username VARCHAR (50),
 	password VARCHAR (64),
 	first_name VARCHAR (50),
 	last_name VARCHAR (50),
-	email VARCHAR(48)
+	email VARCHAR(48),
 	temp_pass BOOLEAN,
 	PRIMARY KEY (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -26,7 +26,7 @@ CREATE TABLE Tag(
 	username_tagger VARCHAR (50),
 	username_taggee VARCHAR (50),
 	timest TIMESTAMP,
-	status BOOLEAN,
+	status BOOLEAN DEFAULT 0 NOT NULL,
 	PRIMARY KEY (id, username_tagger, username_taggee),
 	FOREIGN KEY (id) REFERENCES Content(id) ON DELETE CASCADE,
 	FOREIGN KEY (username_tagger) REFERENCES Person(username),

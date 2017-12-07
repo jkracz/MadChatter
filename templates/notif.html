@@ -13,5 +13,24 @@
         <a href="/resetPassword"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
+
+    <h2>Pending Tags</h2>
+    <table>
+        <th>Content</th>
+        <th>Tagged By</th>
+
+    {% for line in pendingTags %}
+        <tr>
+            <td><img src={{line.file_path}} style="width:400px;height:400px;"></td>
+            <td>{{line.username_tagger}}</td>
+            <td><form action="/acceptTag/{{line.id}}" method="POST">
+                    <input type="submit" value="Accept"/></form></td>
+            <td><form action="/denyTag/{{line.id}}" method="POST">
+                    <input type="submit" value="Deny"/></form></td>
+
+        </tr>
+    {% endfor %}
+    </table>
+
 </body>
 </html>
