@@ -1,0 +1,11 @@
+<html>
+<header>
+	<h1>Add Friend</h1>
+</header>
+<body>
+	<form action = '/add_friend/{{group_name}}' method = "POST">
+		 <p>Who are you adding?: <input type="text" name = "target_username" placeholder="Username of the person you're adding" required/></p>
+		 <input type="submit" value = "Add to {{group_name}}" class="buttons"/>
+	</form>
+</body>
+</html>

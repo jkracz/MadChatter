@@ -7,10 +7,15 @@
     <header role="banner">
         <h2 id="logo">Mad Chatter</h2>
         <a href="/home"><button type="button" class="nav-buttons">Home</button></a>
-        <a href="/profile/{{username}}"><button type="button" class="nav-buttons">My Profile</button></a>
+        <a href="/friend_group"><button type="button" class="nav-buttons">Manage Friend Groups</button></a>
+         <a href="/user_item"><button type="button" class="nav-buttons">Manage Your Posts</button></a>
+        <a href="/myProfile"><button type="button" class="nav-buttons">My Profile</button></a>
         <a href="/notif"><button type="button" class="nav-buttons">Notifications</button></a>
-        <a href="/resetPassword"><button type="button" class="nav-buttons">Settings</button></a>
+        <a href="/reset_password"><button type="button" class="nav-buttons">Settings</button></a>
+        <a href="/change_password"><button type="button" class="nav-buttons">Change Password</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
+      
+
     </header>
     <form action="/post" method="POST">
 	   <h1>Welcome {{username}}</h1>
@@ -40,11 +45,11 @@
         <td></td> <!--# of tags-->
         <td><a href="/view/{{line.id}}">View Item</a></td>
         <td><a href="/comment/{{line.id}}">Comment on Item</a></td>
+        <td><a href="/share_via_email/{{line.id}}">Share Item</a></td>
 	</tr>
 {% endfor %}
 </table>
 <br>
-<a href="/logout">Logout</a>
 
 </body>
 
