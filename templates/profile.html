@@ -17,15 +17,49 @@
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
     
-    <div class="flex-personal">
+    <div class="flex-container">
+        <div class="flex-left">
         <div id="me">
             {% for line in user %}
             <h1 id="me-name">{{line.first_name}} {{line.last_name}}</h1>
             <p id="me-id">@{{username}}</p>
             {% endfor %}
         </div>
+        
         <div>
-            <h2>My Posts</h2>
+            <h2>Friends List</h2>
+            <table>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+
+            {% for line in friends %}
+            <tr>
+                <td>{{line.username}}</td>
+                <td>{{line.first_name}}</td>
+                <td>{{line.last_name}}</td>
+            </tr>
+            {% endfor %}
+            </table>
+        </div>
+        <br>
+        <div>
+            <h2>Groups</h2>
+            <table>
+                <th>Group</th>
+                <th>Status</th>
+
+            {% for line in groups %}
+            <tr>
+                <td>{{line.group_name}}</td>
+                <td>{{line.status}}</td>
+            </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+        <div>
+            <h1>My Posts</h1>
                 <table>
                     <th>Title</th>
                     <th>Time</th>
@@ -52,36 +86,5 @@
                 </table>
         </div>
     </div>
-    
-    
-    
-    <h2>Friends List</h2>
-    <table>
-        <th>Username</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-
-    {% for line in friends %}
-        <tr>
-            <td>{{line.username}}</td>
-            <td>{{line.first_name}}</td>
-            <td>{{line.last_name}}</td>
-        </tr>
-    {% endfor %}
-    </table>
-
-    <h2>Groups</h2>
-    <table>
-        <th>Group</th>
-        <th>Status</th>
-
-    {% for line in groups %}
-        <tr>
-            <td>{{line.group_name}}</td>
-            <td>{{line.status}}</td>
-        </tr>
-    {% endfor %}
-    </table>
-
 </body>
 </html>
