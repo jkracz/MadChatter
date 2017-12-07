@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>{{user}}'s Profile</title>
+    <title>{{username}}'s Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/hom_prof.css')}}"/>
 </head>
 <body>
@@ -12,8 +12,9 @@
         <a href="/resetPassword"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
-    <h1>{{user}}'s Profile</h1>
+    <h1>{{username}}'s Profile</h1>
     <h2>Friends List</h2>
+    <table>
         <th>Username</th>
         <th>First Name</th>
         <th>Last Name</th>
@@ -26,5 +27,43 @@
         </tr>
     {% endfor %}
     </table>
+
+    <h2>Groups</h2>
+    <table>
+        <th>Group</th>
+        <th>Status</th>
+
+    {% for line in groups %}
+        <tr>
+            <td>{{line.group_name}}</td>
+            <td>{{line.status}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <h2>{{username}}'s Posts</h2>
+    <table>
+        <th>Title</th>
+        <th>Time</th>
+        <th>Posted by</th>
+        <th>Content</th>
+        <th>Comments</th>
+        <th>Tags</th>
+
+    {% for line in posts %}
+        <tr>
+            <td>{{line.content_name}}</td>
+            <td>{{line.timest}}</td>
+            <td></td> <!--fname of poster-->
+            <td><img src={{line.file_path}} style="width:400px;height:400px;"></td>
+            <td></td> <!--# of comments-->
+            <td></td> <!--# of tags-->
+            <td><a href="/view/{{line.id}}">View Item</a></td>
+            <td><a href="/comment/{{line.id}}">Comment on Item</a></td>
+            <td><a href="/share_via_email/{{line.id}}">Share Item</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+
 </body>
 </html>
