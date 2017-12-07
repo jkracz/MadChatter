@@ -214,6 +214,8 @@ def myProfile(username):
 	cur.close()
 	return render_template('profile.html', username=username,friends=friendsList, groups=groupList, posts=userPosts)
 
+@app.route('/')
+
 @app.route('/notif') #MUST IMPLEMENT
 @login_required
 def notif():

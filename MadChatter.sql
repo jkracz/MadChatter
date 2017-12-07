@@ -1,4 +1,4 @@
-CREATE DATABASE MadChatter
+CREATE DATABASE MadChatter;
 
 CREATE TABLE Person(
 	username VARCHAR (50),

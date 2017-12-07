@@ -14,7 +14,7 @@
 	{% for info in view_item %}
 		<tr>
 			<td>{{info.id}}</td>
-			<td>{{info.file_path}}</td>
+			<td><img src={{info.file_path}} style="width:400px;height:400px;"></td>
 			<td>{{info.timest}}</td>
 			<td>{{info.comment_text}}</td>
 			<td>{{info.username_taggee}}
