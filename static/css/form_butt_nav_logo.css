@@ -3,10 +3,6 @@ body{
     text-align:center;
 }
 
-table{
-    width:100%;
-}
-
 .buttons{
     background-color:red;
     border-color:darkred;
@@ -32,4 +28,5 @@ table{
 #logo{
     font-size:75px;
     color:darkgreen;
+    margin-bottom:10px;
 }

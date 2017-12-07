@@ -10,9 +10,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=8889,
+	port=3306,
 	user='root',
-	password='root',
+	password='',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -211,17 +211,16 @@ def myProfile(username):
 	postQuery = 'SELECT * FROM Content WHERE username = %s ORDER BY timest DESC'
 	cur.execute(postQuery, (username))
 	userPosts = cur.fetchall()
+	personInfoQuery = 'SELECT first_name, last_name FROM Person WHERE username=%s'
+	cur.execute(personInfoQuery, (username))
+	personInfo = cur.fetchall()
 	cur.close()
-	return render_template('profile.html', username=username,friends=friendsList, groups=groupList, posts=userPosts)
+	return render_template('profile.html', username=username, user=personInfo, friends=friendsList, groups=groupList, posts=userPosts)
 
 @app.route('/notif') #MUST IMPLEMENT
 @login_required
 def notif():
     return render_template('notif.html', username=session['username'])
-
-@app.route('/home_nav') #MAY NEED TO IMPLEMENT, NOT SURE
-def home_nav():
-    return redirect(url_for('home'))
 
 
 app.secret_key = 'some key that you will never guess'

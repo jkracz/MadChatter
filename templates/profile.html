@@ -1,18 +1,60 @@
 <html>
 <head>
-    <title>{{username}}'s Profile</title>
+    {% for line in user %}
+    <title>{{line.first_name}}'s Profile</title>
+    {% endfor %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/hom_prof.css')}}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css')}}"/>
 </head>
 <body>
     <header role="banner">
         <h2 id="logo">Mad Chatter</h2>
         <a href="/home"><button type="button" class="nav-buttons">Home</button></a>
-        <a href="/myProfile"><button type="button" class="nav-buttons">My Profile</button></a>
+        <a href="/profile/{{username}}"><button type="button" class="nav-buttons">My Profile</button></a>
         <a href="/notif"><button type="button" class="nav-buttons">Notifications</button></a>
         <a href="/resetPassword"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
-    <h1>{{username}}'s Profile</h1>
+    
+    <div class="flex-personal">
+        <div id="me">
+            {% for line in user %}
+            <h1 id="me-name">{{line.first_name}} {{line.last_name}}</h1>
+            <p id="me-id">@{{username}}</p>
+            {% endfor %}
+        </div>
+        <div>
+            <h2>My Posts</h2>
+                <table>
+                    <th>Title</th>
+                    <th>Time</th>
+                    <th>Posted by</th>
+                    <th>Content</th>
+                    <th>Comments</th>
+                    <th>Tags</th>
+
+                    {% for line in posts %}
+                <tr>
+                    <td>{{line.content_name}}</td>
+                    <td>{{line.timest}}</td>
+                    <td></td> <!--fname of poster-->
+                    <td><img src={{line.file_path}} style="width:400px;height:400px;"></td>
+                    <td></td> <!--# of comments-->
+                    <td></td> <!--# of tags-->
+                    <td>
+                        <a href="/view/{{line.id}}"><button type="button" class="item-buttons">View</button></a><br><br>
+                        <a href="/comment/{{line.id}}"><button type="button" class="item-buttons">Comment</button></a><br><br>
+                        <a href="/share_via_email/{{line.id}}"><button type="button" class="item-buttons">Share</button></a>
+                    </td>
+                </tr>
+                    {% endfor %}
+                </table>
+        </div>
+    </div>
+    
+    
+    
     <h2>Friends List</h2>
     <table>
         <th>Username</th>
@@ -37,30 +79,6 @@
         <tr>
             <td>{{line.group_name}}</td>
             <td>{{line.status}}</td>
-        </tr>
-    {% endfor %}
-    </table>
-
-    <h2>{{username}}'s Posts</h2>
-    <table>
-        <th>Title</th>
-        <th>Time</th>
-        <th>Posted by</th>
-        <th>Content</th>
-        <th>Comments</th>
-        <th>Tags</th>
-
-    {% for line in posts %}
-        <tr>
-            <td>{{line.content_name}}</td>
-            <td>{{line.timest}}</td>
-            <td></td> <!--fname of poster-->
-            <td><img src={{line.file_path}} style="width:400px;height:400px;"></td>
-            <td></td> <!--# of comments-->
-            <td></td> <!--# of tags-->
-            <td><a href="/view/{{line.id}}">View Item</a></td>
-            <td><a href="/comment/{{line.id}}">Comment on Item</a></td>
-            <td><a href="/share_via_email/{{line.id}}">Share Item</a></td>
         </tr>
     {% endfor %}
     </table>

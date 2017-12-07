@@ -2,11 +2,13 @@
 <head>
     <title>Log In</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/ind_log_reg_res.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
 </head>
 <body>
     <header role="banner">
         <h2 id="logo">Mad Chatter</h2>
     </header>
+    <br>
     <form action="/loginAuth" method="POST">
         <p>Username: <input type="text" name = "username" placeholder="username" required/></p>
         <p>Password: <input type="password" name = "password" placeholder="password" required/></p><br>
