@@ -3,7 +3,8 @@ h1, h2{
 }
 
 h1{
-    font-size:35px;
+    font-size:40px;
+    color:darkred;
 }
 
 .item-buttons{
@@ -41,7 +42,7 @@ h1{
     justify-content:center;
     background-color:#f9dbd9;
     padding:15px;
-    margin-left:5px;
+    margin-left:10px;
 }
 
 .flex-left>div{
