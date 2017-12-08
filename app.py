@@ -10,9 +10,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=3306,
+	port=8889,
 	user='root',
-	password='',
+	password='root',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -29,13 +29,17 @@ def login_required(f):
 
 @app.route("/")
 def main():
-	return render_template('index.html')
+	message = False
+	if (session.get('logged_in') == True):
+		message = True
+	return render_template('index.html',message=message)
 
 @app.route("/login")
 def login():
-    #if 'logged_in' in session:
-        #return redirect(url_for('home'))
-    return render_template('login.html')
+	message = False
+	if (session.get('logged_in') == True):
+		message = True
+  return render_template('login.html')
 
 @app.route("/register")
 def register():
@@ -109,12 +113,6 @@ def loginAuth():
 		return render_template('login.html', error=error)
 
 
-@app.route('/resetPassword', methods=['POST'])
-def resetPassword():
-	##incomplete
-        return redirect('reset_password.html')
-
-
 @app.route('/change_password', methods = ['GET','POST'])
 def change_password():
     if request.method == 'POST':
@@ -148,20 +146,9 @@ def reset_password():
     checkAccount(username, email)
     return redirect(url_for('login'))
 
-@app.route('/user_posts', methods = ['GET'])
-def user_posts():
-    username = session['username']
-    get_query = "SELECT * FROM content WHERE username = %s"
-    cursor = conn.cursor()
-    cursor.execute(get_query, (username))
-    posts = cursor.fetchall()
-    cursor.close()
-    return render_template('user_posts.html', posts = posts)
-
 
 @app.route('/delete/<item_id>', methods = ['GET', 'POST'])
 def delete(item_id):
-
     username = session['username']
     delete_query = "DELETE FROM content WHERE username = %s AND content.id = %s"
     cursor = conn.cursor()
@@ -169,7 +156,7 @@ def delete(item_id):
     conn.commit()
     cursor.close()
     message = "Item has been deleted"
-    return redirect(url_for('home'))
+    return redirect(url_for('profile',username=username))
 
 
 @app.route('/create_group', methods = ['GET', 'POST'])
@@ -223,9 +210,9 @@ def post():
 	cursor = conn.cursor();
 	content = request.form['content']
 	description = request.form['description']
-	public = request.form['makePublic']
-	if(public != '1'):
-		public = '0'
+	public = '0'
+	if(request.form.get('makePublic')):
+		public = '1'
 	query = 'INSERT INTO content (username,file_path,content_name,public) VALUES(%s, %s, %s, %s)'
 	cursor.execute(query, (username,content,description,public))
 	conn.commit()
@@ -254,7 +241,6 @@ def post_comment():
         comment = request.form['comment']
         username = session['username']
         time = str(datetime.now())
-
         inst = "INSERT INTO comment(id, username, timest, comment_text) VALUES (%s, %s, %s, %s)"
         cursor = conn.cursor();
         cursor.execute(inst, (content_id, username, time, comment))
