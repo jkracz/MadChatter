@@ -50,11 +50,14 @@ def register():
 def home():
 	username = session['username']
 	cursor = conn.cursor();
-	query = 'SELECT id, timest, file_path, content_name FROM content WHERE username = %s OR public = 1 ORDER BY timest DESC'
-	cursor.execute(query, (username))
-	data = cursor.fetchall()
+	postQuery = 'SELECT id, timest, file_path, content_name FROM content WHERE username = %s OR public = 1 ORDER BY timest DESC'
+	cursor.execute(postQuery, (username))
+	postData = cursor.fetchall()
+	userQuery = 'SELECT first_name FROM Person WHERE username=%s'
+	cursor.execute(userQuery, (username))
+	userData = cursor.fetchall()
 	cursor.close()
-	return render_template('home.html', username=username, posts=data)
+	return render_template('home.html', username=username, user=userData, posts=postData)
 
 #Register new user
 @app.route('/registerAuth', methods=['GET', 'POST'])
