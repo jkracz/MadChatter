@@ -4,7 +4,9 @@ from hashlib import sha1
 from functools import wraps
 from socket import *
 from datetime import datetime
-import email_module as email
+import email_module as em
+import random
+import string
 
 app = Flask(__name__)
 
@@ -17,6 +19,29 @@ conn = pymysql.connect(host='localhost',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
 
+#function determines if target username exists            
+def search_user(target_username):
+    cursor = conn.cursor()
+    inst = "SELECT * FROM person WHERE username = %s"
+    cursor.execute(inst, (target_username))
+    exist = cursor.fetchone()
+    cursor.close()
+    if exist:
+        return True
+    else:
+        return False
+    
+#function checks username and password if they match and return boolean value
+def check_user_pw(username, password):
+    cursor = conn.cursor()
+    inst = "SELECT * FROM person WHERE username = %s AND password = sha(%s)"
+    cursor.execute(inst, (username, password))
+    valid = cursor.fetchone()
+    cursor.close()
+    if valid:
+        return True
+    else:
+        return False
 #wrap around functions that are only available to logged in users
 def login_required(f):
     @wraps(f)
@@ -29,17 +54,17 @@ def login_required(f):
 
 @app.route("/")
 def main():
-	message = False
-	if (session.get('logged_in') == True):
-		message = True
-	return render_template('index.html',message=message)
+    message = False
+    if (session.get('logged_in') == True):
+            message = True
+    return render_template('index.html',message=message)
 
 @app.route("/login")
 def login():
-	message = False
-	if (session.get('logged_in') == True):
-		message = True
-  return render_template('login.html')
+    message = False
+    if (session.get('logged_in') == True):
+            message = True
+    return render_template('login.html')
 
 @app.route("/register")
 def register():
@@ -191,18 +216,43 @@ def checkAccount(username, email):
         #if account exists, send email
         if data:
                 email = data['email']
-                new_pw = '123123123'
+                new_pw = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
                 inst = 'UPDATE person SET password = sha1(%s) WHERE username = %s AND email = %s'
                 cursor = conn.cursor()
                 cursor.execute(inst, (new_pw, username, email))
                 conn.commit()
                 cursor.close()
-                email.mailPassword(new_pw, email)
-                return 'Password reset was successful, new password has been mailed to your email!'
+                message = "Your temporary password is: %s" % new_pw
+                em.send_email(message, email)      
         #if account doesn't exist, return 0
         else:
-                return 'User cannot be found'
+                return 'failed'
 
+@app.route('/share/<item_id>', methods = ['GET', 'POST'])
+def share(item_id):
+    target_username = request.form['share_to']
+    user_exist = search_user(target_username)
+    if user_exist:
+        cursor = conn.cursor()
+        inst = "SELECT email FROM person WHERE username = %s"
+        cursor.execute(inst, (target_username))
+        data = cursor.fetchone()
+        cursor.close()
+        email = data['email']
+        username = session['username']
+        composed_message = "%s shared the following item: %s with you" % (username, item_id)
+        em.send_email(composed_message, email)
+        message = "You have shared %s with %s" % (item_id, target_username)
+        return redirect(url_for('home'))
+    elif user_exist == False:
+        error = "User not found."
+        return redirect(url_for('home', error = error))
+    else:
+        error = "Something went wrong."
+        return redirect(url_for('home', error = error)) 
+    
+    
+    
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post():
@@ -219,34 +269,72 @@ def post():
 	cursor.close()
 	return redirect(url_for('home'))
 
-@app.route('/view/<int:item_id>/', methods=['GET'])
+@app.route('/add_friend/<group_name>', methods = ['GET', 'POST'])
+def add_friend(group_name):
+    if request.method == 'POST':
+        target_username = request.form['target_username']
+        target_group_name = group_name
+        username = session['username']
+        if target_username == username:
+            error = "You are the owner of the group!"
+            return redirect(url_for('profile', username = username, error = error))
+        user_exist = search_user(target_username)
+        if user_exist:
+            inst = "INSERT INTO member VALUES (%s, %s, %s)"
+            cursor = conn.cursor()
+            cursor.execute(inst, (target_username, target_group_name, username))
+            conn.commit()
+            cursor.close()
+            message = 'You have successfully added %s to your group: %s' % (target_username, target_group_name)
+            return redirect(url_for('profile', username = username, message = message))
+        else:
+            error = "User cannot be found"
+            return redirect(url_for('profile', username = username, error = error))
+    return render_template('add_friend.html', group_name = group_name)
+
+def get_comments(item_id):
+    inst = "SELECT comment.comment_text, comment.timest FROM comment WHERE comment.id = %s"
+    cursor = conn.cursor()
+    cursor.execute(inst, (item_id))
+    comments = cursor.fetchall()
+    cursor.close()
+    return comments
+
+def get_taggees(item_id):
+    inst = "SELECT tag.username_taggee FROM tag WHERE tag.id = %s"
+    cursor = conn.cursor()
+    cursor.execute(inst, (item_id))
+    taggees = cursor.fetchall()
+    cursor.close()
+    return taggees
+
+@app.route('/view/<item_id>/', methods=['GET'])
 @login_required
 def view(item_id):
-        inst = "SELECT * FROM content WHERE content.id = %s"
-        cursor = conn.cursor();
-        cursor.execute(inst, (item_id))
-        data = cursor.fetchall()
-        cursor.close()
-        return render_template('view.html', view_item = data)
+    inst = "SELECT content.id, content.file_path FROM content WHERE content.id = %s"
+    cursor = conn.cursor()
+    cursor.execute(inst, (item_id))
+    content = cursor.fetchone()
+    comments = get_comments(item_id)
+    taggees = get_taggees(item_id)
+    cursor.close()
+    return render_template('view.html', content = content, comments = comments, taggees = taggees)
+
+
 
 @app.route('/comment/<int:item_id>', methods=['GET', 'POST'])
 @login_required
 def comment(item_id):
-    return render_template('comment.html', content_id = item_id)
-
-@app.route('/post_comment', methods=['POST'])
-def post_comment():
-    if request.method == 'POST':
-        content_id = request.form['content_id']
-        comment = request.form['comment']
-        username = session['username']
-        time = str(datetime.now())
-        inst = "INSERT INTO comment(id, username, timest, comment_text) VALUES (%s, %s, %s, %s)"
-        cursor = conn.cursor();
-        cursor.execute(inst, (content_id, username, time, comment))
-        conn.commit()
-        cursor.close()
-        return redirect(url_for('home'))
+    comment = request.form['comment']
+    username = session['username']
+    time = str(datetime.now())
+    inst = "INSERT INTO comment(id, username, timest, comment_text) VALUES (%s, %s, %s, %s)"
+    cursor = conn.cursor();
+    cursor.execute(inst, (item_id, username, time, comment))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('view', item_id = item_id))
+    
 
 @app.route('/logout')
 @login_required

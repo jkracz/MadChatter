@@ -43,17 +43,25 @@
                 </div>
                 <div id="post-butt">
                     <a href="/view/{{line.id}}"><button type="button" class="item-buttons">View</button></a>
-                    <a href="/comment/{{line.id}}"><button type="button" class="item-buttons">Comment</button></a>
                     <a href="/share_via_email/{{line.id}}"><button type="button" class="item-buttons">Share</button></a>
+                </div>
+                <div>
+                    <form action="comment/{{line.id}}" method="POST">
+        			<input type="text" name="comment" placeholder="Your comment"/>
+                    <input class="item-buttons" type="submit" value="Comment"></form>
                 </div>
                 <div>
                     <form action="/tag/{{line.id}}" method="POST">
                         <input type="text" name="taggee" placeholder="username"/>
                         <input class="item-buttons" type="submit" value=Tag></form>
                 </div>
+                <div>
+                    <form action="share/{{line.id}}" method="GET">
+        			<input type="text" name="share_to" placeholder="Username" minlength=4 required>
+        			<input type="submit" value="Share"></form>
+                </div>
             </div>
             {% endfor %}
         </div>
     </div>
-</body>
-</html>
+    </form>
