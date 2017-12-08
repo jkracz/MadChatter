@@ -12,14 +12,14 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=3306,
+	port=8889,
 	user='root',
-	password='',
+	password='root',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
 
-#function determines if target username exists            
+#function determines if target username exists
 def search_user(target_username):
     cursor = conn.cursor()
     inst = "SELECT * FROM person WHERE username = %s"
@@ -30,7 +30,7 @@ def search_user(target_username):
         return True
     else:
         return False
-    
+
 #function checks username and password if they match and return boolean value
 def check_user_pw(username, password):
     cursor = conn.cursor()
@@ -223,7 +223,7 @@ def checkAccount(username, email):
                 conn.commit()
                 cursor.close()
                 message = "Your temporary password is: %s" % new_pw
-                em.send_email(message, email)      
+                em.send_email(message, email)
         #if account doesn't exist, return 0
         else:
                 return 'failed'
@@ -249,10 +249,10 @@ def share(item_id):
         return redirect(url_for('home', error = error))
     else:
         error = "Something went wrong."
-        return redirect(url_for('home', error = error)) 
-    
-    
-    
+        return redirect(url_for('home', error = error))
+
+
+
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
 def post():
@@ -334,7 +334,7 @@ def comment(item_id):
     conn.commit()
     cursor.close()
     return redirect(url_for('view', item_id = item_id))
-    
+
 
 @app.route('/logout')
 @login_required
