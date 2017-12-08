@@ -171,7 +171,7 @@ def delete(item_id):
     conn.commit()
     cursor.close()
     message = "Item has been deleted"
-    return render_template('profile.html', message = message)
+    return redirect(url_for('home'))
 
     
 @app.route('/create_group', methods = ['GET', 'POST'])
