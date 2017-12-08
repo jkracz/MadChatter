@@ -1,7 +1,7 @@
 <html>
 <head>
     <title>Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/hom_prof.css')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css')}}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
 </head>
 <body>
@@ -16,13 +16,19 @@
 
     </header>
     <form action="/post" method="POST">
-	   <h1>Welcome {{username}}</h1>
-	   <h2>Share something with us!</h2>
-        <input type="text" name = "description" placeholder="Title" required/> </br>
-        <input type="url" name = "content" placeholder="Link" required/> <br><br/>
-	    <input type="checkbox" id="makePublic" name= "makePublic" value="1" placeholder="Public"/>
-	    <label for="makePublic">Make it public</label><br><br/>
-	    <input type="submit" value = Post class="buttons"/>
+        {%for line in user %}
+        <h1 id="welcome">Welcome {{line.first_name}}</h1>
+        {% endfor %}
+        <h2 style="color:#db8585"><i>Share something with us!</i></h2>
+        <div class="box">
+            <p>Title</p>
+            <input class="enter-info" type="text" name = "description" placeholder="Give it a name!" required/> </br>
+            <p>URL</p>
+            <input class="enter-info" type="url" name = "content" placeholder="Link to your photo!" required/> <br><br/>
+            <input type="checkbox" id="makePublic" name= "makePublic" value="1" placeholder="Public"/>
+	       <label for="makePublic">Make it public</label><br><br/>
+	       <input type="submit" value = Post class="buttons"/>
+        </div>
     </form>
 
 <table>

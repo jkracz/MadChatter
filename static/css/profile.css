@@ -32,7 +32,7 @@ h1{
     flex-direction:column;
     justify-content:space-between;
     background-color:#f9dbd9;
-    padding:10px;
+    padding:15px;
 }
 
 .post-container{
@@ -41,18 +41,35 @@ h1{
     justify-content:center;
     background-color:#f9dbd9;
     padding:15px;
+    margin-left:5px;
 }
 
 .flex-left>div{
     background-color:white;
+    width:275px;
 }
 
 .flex-left>#me{
     background-color:#f9dbd9;
 }
 
+.post-container>#post-butt{
+    align-items:baseline;
+    padding-top:5px;
+}
+
 #me-id{
     margin-top:5px;
     color:gray;
     font-size:15px;
+}
+
+#image{
+    max-width:95%;
+    max-height:95%;
+}
+
+#group-butt{
+    background-color:#f9dbd9;
+    padding-top:5px;
 }

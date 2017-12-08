@@ -1,0 +1,20 @@
+h1, h2, p{
+    margin-bottom:3px;
+}
+
+.enter-info{
+    width:200px;
+}
+
+.box{
+    display:inline-block;
+    width:250px;
+    height:auto;
+    align-items:center;
+    padding:10px;
+    background-color:#f9dbd9;
+}
+#welcome{
+    font-size:40px;
+    color:darkred;
+}

@@ -45,7 +45,6 @@
         <br>
         <div>
             <h2>Groups</h2>
-             <td><a href="/create_group">Create Group</a></td>
             <table>
                 <th>Group</th>
                 <th>Status</th>
@@ -60,23 +59,24 @@
             {% endfor %}
             </table>
         </div>
+        <div id="group-butt">
+            <a href="/create_group"><button type="button" class="item-buttons">Create Group</button></a>
+        </div>
     </div>
         <div>
-            <h1 id="post-title">My Posts</h1>
-            
             {% for line in posts %}
             <div class="post-container">
                 <div>
-                    <h2>{{line.content_name}}</h2>
+                    <h1>{{line.content_name}}</h1>
                     <p>{{line.timest}}</p>
                 </div>
                 <div>
-                    <img src={{line.file_path}} style="width:350px; height:350px;">
+                    <img id="image" src={{line.file_path}}>
                 </div>
-                <div>
-                    <a href="/delete/{{line.id}}"><button type="button" class="item-buttons">Delete</button></a>
+                <div id="post-butt">
                     <a href="/view/{{line.id}}"><button type="button" class="item-buttons">View</button></a>
                     <a href="/comment/{{line.id}}"><button type="button" class="item-buttons">Comment</button></a>
+                    <a href="/delete/{{line.id}}"><button type="button" class="item-buttons">Delete</button></a>
                     <a href="/share_via_email/{{line.id}}"><button type="button" class="item-buttons">Share</button></a>
                 </div>
             </div>
