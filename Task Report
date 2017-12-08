@@ -44,8 +44,8 @@ $ Hash passwords
 $ Implement logout in app.py
 $ Implement post
 $ Implement home in app.py
-^ Implement tag requests
-^ implement tagging
+$ Implement tag requests
+$ implement tagging
 $ implement user profile
 $ implement my profile
 $ Update SQL tables (add istemppass to user, ON DELETE CASCADE)
