@@ -48,7 +48,9 @@
         <td></td> <!--# of comments-->
         <td></td> <!--# of tags-->
         <td><a href="/view/{{line.id}}">View</a></td>
-        <td><a href="/comment/{{line.id}}">Comment</a></td>
+        <td><form action="comment/{{line.id}}" method="POST">
+        			<input type="text" name="comment" placeholder="Your comment"/>
+        			<input type="submit" value="Comment"></form></td>
         <td><a href="/share_via_email/{{line.id}}">Share Via Email</a></td>
         <td><form action="/tag/{{line.id}}" method="POST">
         			<input type="text" name="taggee" placeholder="username"/>

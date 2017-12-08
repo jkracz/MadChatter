@@ -4,21 +4,44 @@
 <body>
 	<h1>Viewing</h1>
 	<table>
-		<tr>
 			<th>Content ID</th>
 			<th>File Path</th>
+			<th>Actions</th>
+				<tr>
+					<td>{{content.id}}</td>
+					<td>{{content.file_path}}</td>
+					<td>
+						<form action="/comment/{{content.id}}" method="POST">
+        					<input type="text" name="comment" placeholder="Your comment" minlength=1 />
+        					<input type="submit" value="Comment"></form>
+        				<form action="share_via_email/{{content.id}}" method="POST">
+        					<input type="text" name="share_to" placeholder="Username" minlength=4 required>
+        					<input type="submit" value="Share"></form>
+        				<form action="/tag/{{content.id}}" method="POST">
+        					<input type="text" name="taggee" placeholder="username"/>
+        					<input type="submit" value=Tag></form>
+				</tr>
+	</table>
+	<br>
+	<table>
 			<th>Time</th>
 			<th>Comment</th>
+			{% for comment in comments %}
+				<tr>
+					<td>{{comment.timest}}</td>
+					<td>{{comment.comment_text}}</td>
+				</tr>
+			{% endfor %}
+	</table>
+	<br>
+	<table>
 			<th>Tag</th>
-		</tr>
-	{% for info in view_item %}
-		<tr>
-			<td>{{info.id}}</td>
-			<td><img src={{info.file_path}} style="width:400px;height:400px;"></td>
-			<td>{{info.timest}}</td>
-			<td>{{info.comment_text}}</td>
-			<td>{{info.username_taggee}}
-		</tr>
-	{% endfor %}
+			{% for taggee in taggees %}
+			<tr>
+				<td>{{taggee.username_taggee}}</td>
+			</tr>
+			{% endfor %}
+	</table>
+	<br>
 </body>
 </html>
