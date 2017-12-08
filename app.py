@@ -4,7 +4,7 @@ from hashlib import sha1
 from functools import wraps
 from socket import *
 from datetime import datetime
-import email_module as email
+import email_module as em
 import random
 
 app = Flask(__name__)
@@ -226,9 +226,31 @@ def checkAccount(username, email):
         #if account doesn't exist, return 0
         else:
                 return 'failed'
-@app.route('/share/<item_id>', methods = ['GET'])
+
+@app.route('/share/<item_id>', methods = ['GET', 'POST'])
 def share(item_id):
-    target_user = request.form['share_to']
+    target_username = request.form['share_to']
+    user_exist = search_user(target_username)
+    if user_exist:
+        cursor = conn.cursor()
+        inst = "SELECT email FROM person WHERE username = %s"
+        cursor.execute(inst, (target_username))
+        data = cursor.fetchone()
+        cursor.close()
+        email = data['email']
+        username = session['username']
+        composed_message = "%s shared the following item: %s with you" % (username, item_id)
+        em.send_email(composed_message, email)
+        message = "You have shared %s with %s" % (item_id, target_username)
+        return redirect(url_for('home'))
+    elif user_exist == False:
+        error = "User not found."
+        return redirect(url_for('home', error = error))
+    else:
+        error = "Something went wrong."
+        return redirect(url_for('home', error = error)) 
+    
+    
     
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
@@ -245,35 +267,7 @@ def post():
 	conn.commit()
 	cursor.close()
 	return redirect(url_for('home'))
-@app.route('/share_via_email/<item_id>', methods = ['GET', 'POST'])
-def share_via_email(item_id):
-    if request.method == 'POST':
-        
-        target_group = request.form['target_group']
-        content_shared = item_id
-        username = session['username']
-        
-        #check if friend group exists
-        cursor = conn.cursor()
-        check_query = "SELECT * from friendgroup WHERE username = %s AND friendgroup.group_name = %s"
-        cursor.execute(check_query, (username, target_group))
-        group_valid = cursor.fetchone()
-        #if group exists
-        if group_valid:
-            insert_query = "INSERT INTO share VALUES (%s, %s, %s)"
-            cursor.execute(insert_query, (content_shared, target_group, username))
-            conn.commit()
-            #get list of member emails
-            find_member_email = "SELECT email FROM member NATURAL JOIN person WHERE member.group_name = %s AND member.username_creator = %s"
-            cursor.execute(find_member_email, (target_group, session['username']))
-            email_list = cursor.fetchall()
-            message = "%s has shared the following item: %s with you" % (session['username'], item_id)
-            #send emails 
-            for email in email_list:
-                em.send_email(message, email)
-            return render_template('home.html', message = message)
-    error = 'We had some problem with sharing, please try again'
-    return render_template('home.html', message = error)
+
 @app.route('/add_friend/<group_name>', methods = ['GET', 'POST'])
 def add_friend(group_name):
     if request.method == 'POST':
@@ -282,7 +276,7 @@ def add_friend(group_name):
         username = session['username']
         if target_username == username:
             error = "You are the owner of the group!"
-            return redirect(url_for('home'))
+            return redirect(url_for('profile', username = username, error = error))
         user_exist = search_user(target_username)
         if user_exist:
             inst = "INSERT INTO member VALUES (%s, %s, %s)"
@@ -291,10 +285,10 @@ def add_friend(group_name):
             conn.commit()
             cursor.close()
             message = 'You have successfully added %s to your group: %s' % (target_username, target_group_name)
-            return redirect(url_for('home'))
+            return redirect(url_for('profile', username = username, message = message))
         else:
             error = "User cannot be found"
-            return redirect(url_for('home'))
+            return redirect(url_for('profile', username = username, error = error))
     return render_template('add_friend.html', group_name = group_name)
 
 def get_comments(item_id):
