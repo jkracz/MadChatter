@@ -1,3 +1,11 @@
+h1, h2{
+    margin-bottom:0px;
+}
+
+h1{
+    font-size:35px;
+}
+
 .item-buttons{
     background-color:red;
     border-color:darkred;
@@ -27,17 +35,20 @@
     padding:10px;
 }
 
+.post-container{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-color:#f9dbd9;
+    padding:15px;
+}
+
 .flex-left>div{
     background-color:white;
 }
 
 .flex-left>#me{
     background-color:#f9dbd9;
-}
-
-#me-name{
-    font-size:35px;
-    margin-bottom:0px;
 }
 
 #me-id{
