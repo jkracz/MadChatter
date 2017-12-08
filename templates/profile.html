@@ -13,7 +13,7 @@
         <a href="/home"><button type="button" class="nav-buttons">Home</button></a>
         <a href="/profile/{{username}}"><button type="button" class="nav-buttons">My Profile</button></a>
         <a href="/notif"><button type="button" class="nav-buttons">Notifications</button></a>
-        <a href="/resetPassword"><button type="button" class="nav-buttons">Settings</button></a>
+        <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
     
@@ -45,6 +45,7 @@
         <br>
         <div>
             <h2>Groups</h2>
+             <td><a href="/create_group">Create Group</a></td>
             <table>
                 <th>Group</th>
                 <th>Status</th>
@@ -53,7 +54,8 @@
             <tr>
                 <td>{{line.group_name}}</td>
                 <td>{{line.status}}</td>
-                 <td><a href="/add_friend/{{line.group_name}}">Add Member</a></td>
+                 <td><a href="/add_friend/{{line.group_name}}">Add Friend</a></td>
+                
             </tr>
             {% endfor %}
             </table>

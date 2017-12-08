@@ -112,6 +112,85 @@ def resetPassword():
         return redirect('reset_password.html')
 
 
+@app.route('/change_password', methods = ['GET','POST'])
+def change_password():
+    if request.method == 'POST':
+        username = session['username']
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        if (check_user_pw(username, current_password) and (new_password == confirm_password)):
+            cursor = conn.cursor()
+            inst = ("UPDATE person SET password = sha1(%s) WHERE username = %s")
+            cursor.execute(inst, (new_password, username))
+            conn.commit()
+            cursor.close()
+            return redirect(url_for('home'))
+        elif (new_password != confirm_password):
+            ##need to implement error message
+            return redirect(url_for('login'))
+        else:
+            return rediret(url_for('login'))
+    return render_template('change_password.html')
+
+
+@app.route('/forgot_password')
+def forgot_password():
+    return render_template('reset_password.html')
+
+@app.route('/reset_password', methods = ['GET', 'POST'])
+def reset_password():
+    username = request.form['username']
+    email = request.form['email']
+    checkAccount(username, email)
+    return redirect(url_for('login'))
+
+@app.route('/user_posts', methods = ['GET'])
+def user_posts():
+    username = session['username']
+    get_query = "SELECT * FROM content WHERE username = %s"
+    cursor = conn.cursor()
+    cursor.execute(get_query, (username))
+    posts = cursor.fetchall()
+    cursor.close()
+    return render_template('user_posts.html', posts = posts)
+
+
+@app.route('/delete/<item_id>', methods = ['GET', 'POST'])
+def delete(item_id):
+
+    username = session['username']
+    delete_query = "DELETE FROM content WHERE username = %s AND content.id = %s"
+    cursor = conn.cursor()
+    cursor.execute(delete_query, (username, item_id))
+    conn.commit()
+    cursor.close()
+    message = "Item has been deleted"
+    return redirect(url_for('home'))
+
+
+@app.route('/create_group', methods = ['GET', 'POST'])
+def create_group():
+    if request.method == 'POST':
+        username = session['username']
+        group_name = request.form['group_name']
+        description = request.form['description']
+        check_query = "SELECT * FROM friendgroup WHERE username = %s AND group_name = %s"
+        cursor = conn.cursor()
+        cursor.execute(check_query, (username, group_name))
+        already_exists = cursor.fetchone()
+        if already_exists:
+            error = 'This group already exists'
+            return render_template('friend_group.html', error = error)
+        else:
+            insert_query = 'INSERT INTO friendgroup VALUES (%s, %s, %s)'
+            cursor.execute(insert_query, (group_name, username, description))
+            conn.commit()
+            cursor.close()
+            message = 'You have successfully created your friendgroup: %s' % group_name
+            return render_template('friend_group.html', message = message)
+    return render_template('create_group.html')
+
 #when user resets password, function checks for associated account and mail password
 def checkAccount(username, email):
         inst = 'SELECT * FROM person WHERE username = %s AND email = %s'
