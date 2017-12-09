@@ -16,5 +16,8 @@
 	{% if error == "alreadymember" %}
 	<p>That user is already a member of the group.</p>
 	{% endif %}
+	{% if error == "alreadytagged" %}
+	<p>That user has already been tagged in this content item.</p>
+	{% endif %}
 	<a href="/home">Back to Home</a>
 </body>

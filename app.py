@@ -322,7 +322,7 @@ def add_friend(group_name):
 	        return render_template('error.html', error="usernotfound")
 
 def get_comments(item_id):
-    inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s"
+    inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s ORDER BY timest"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     comments = cursor.fetchall()
@@ -401,12 +401,23 @@ def profile(username):
 def tag(item_id):
 	tagger = session['username']
 	taggee = request.form['taggee']
-	addTag = 'INSERT INTO Tag (id,username_tagger,username_taggee) VALUES (%s, %s, %s)'
-	cur = conn.cursor();
-	cur.execute(addTag, (item_id,tagger,taggee))
-	conn.commit()
-	cur.close()
-	return redirect(url_for('home'))
+	cur = conn.cursor()
+	if (search_user(taggee)):
+		tagged = 'SELECT * FROM Tag WHERE id=%s AND username_taggee=%s'
+		cur.execute(tagged, (item_id,taggee))
+		isTagged = cur.fetchone()
+		if (isTagged):
+			cur.close()
+			return render_template('error.html', error="alreadytagged")
+		else:
+			addTag = 'INSERT INTO Tag (id,username_tagger,username_taggee) VALUES (%s, %s, %s)'
+			cur.execute(addTag, (item_id,tagger,taggee))
+			conn.commit()
+			cur.close()
+			return redirect(url_for('home'))
+	else:
+		cur.close()
+		return render_template('error.html', error="usernotfound")
 
 @app.route('/acceptTag/<int:item_id>', methods=['POST'])
 def acceptTag(item_id):
