@@ -53,10 +53,11 @@
             <tr>
                 <td>{{line.group_name}}</td>
                 <td>{{line.status}}</td>
-                <form action = '/add_friend/{{line.group_name}}' method = "POST">
+                <td><form action = '/add_friend/{{line.group_name}}' method = "POST">
 		 			<input type="text" name = "target_username" placeholder="Username" required/></p>
 		 			<input type="submit" value = "Add to {{line.group_name}}" class="buttons"/>
-				</form>
+					</form>
+				</td>
                 
             </tr>
             {% endfor %}

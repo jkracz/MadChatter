@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=3306,
+	port=8889,
 	user='root',
-	password='',
+	password='root',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -275,7 +275,6 @@ def add_friend(group_name):
         target_username = request.form['target_username']
         target_group_name = group_name
         username = session['username']
-        
         if target_username == username:
             error = "You are the owner of the group!"
             return redirect(url_for('profile', username = username, error = error))
