@@ -200,6 +200,8 @@ def create_group():
         else:
             insert_query = 'INSERT INTO friendgroup VALUES (%s, %s, %s)'
             cursor.execute(insert_query, (group_name, username, description))
+            insert_query = 'INSERT INTO member VALUES (%s, %s, %s)'
+            cursor.execute(insert_query, (username, group_name, username))
             conn.commit()
             cursor.close()
             message = 'You have successfully created your friendgroup: %s' % group_name
@@ -403,7 +405,7 @@ def denyTag(item_id):
 	cur.close()
 	return redirect(url_for('notif'))
 
-@app.route('/notif') #MUST IMPLEMENT
+@app.route('/notif')
 @login_required
 def notif():
 	username = session['username']
