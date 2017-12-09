@@ -53,7 +53,10 @@
             <tr>
                 <td>{{line.group_name}}</td>
                 <td>{{line.status}}</td>
-                 <td><a href="/add_friend/{{line.group_name}}">Add Friend</a></td>
+                <form action = '/add_friend/{{line.group_name}}' method = "POST">
+		 			<input type="text" name = "target_username" placeholder="Username" required/></p>
+		 			<input type="submit" value = "Add to {{line.group_name}}" class="buttons"/>
+				</form>
                 
             </tr>
             {% endfor %}
@@ -61,6 +64,7 @@
         </div>
         <div id="group-butt">
             <a href="/create_group"><button type="button" class="item-buttons">Create Group</button></a>
+            
         </div>
     </div>
         <div>

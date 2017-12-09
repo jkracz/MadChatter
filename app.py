@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=8889,
+	port=3306,
 	user='root',
-	password='root',
+	password='',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -275,6 +275,7 @@ def add_friend(group_name):
         target_username = request.form['target_username']
         target_group_name = group_name
         username = session['username']
+        
         if target_username == username:
             error = "You are the owner of the group!"
             return redirect(url_for('profile', username = username, error = error))
@@ -290,7 +291,6 @@ def add_friend(group_name):
         else:
             error = "User cannot be found"
             return redirect(url_for('profile', username = username, error = error))
-    return render_template('add_friend.html', group_name = group_name)
 
 def get_comments(item_id):
     inst = "SELECT comment.comment_text, comment.timest FROM comment WHERE comment.id = %s"
