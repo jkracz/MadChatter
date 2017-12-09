@@ -42,18 +42,19 @@
             <h2>Groups</h2>
             <table>
                 <th>Group</th>
-                <th>Status</th>
+                <th>Owner</th>
 
             {% for line in groups %}
             <tr>
                 <td>{{line.group_name}}</td>
-                <td>{{line.status}}</td>
+                <td>{{line.username_creator}}</td>
+                {% if line.username_creator==username %}
                 <td><form action = '/add_friend/{{line.group_name}}' method = "POST">
 		 			<input type="text" name = "target_username" placeholder="Username" required/></p>
 		 			<input type="submit" value = "Add friend to {{line.group_name}}" class="buttons"/>
 					</form>
 				</td>
-
+                {% endif %}
             </tr>
             {% endfor %}
             </table>

@@ -75,8 +75,18 @@ def register():
 def home():
 	username = session['username']
 	cursor = conn.cursor();
-	postQuery = 'SELECT id, timest, file_path, content_name FROM content WHERE username = %s OR public = 1 ORDER BY timest DESC'
-	cursor.execute(postQuery, (username))
+	postQuery = 'SELECT id, timest, file_path, content_name FROM content\
+								WHERE username = %s\
+								OR public = 1\
+								OR username IN (SELECT DISTINCT m.username FROM Member AS m\
+																WHERE (group_name,username_creator) IN (SELECT group_name,username_creator\
+											                                     							FROM Member\
+											                                     							WHERE username = %s))\
+								OR id IN (SELECT id FROM Share AS s\
+													JOIN Member AS m ON (s.group_name = m.group_name AND s.username = m.username_creator)\
+													WHERE m.username=%s)\
+								ORDER BY timest DESC'
+	cursor.execute(postQuery, (username,username,username))
 	postData = cursor.fetchall()
 	userQuery = 'SELECT first_name FROM Person WHERE username=%s'
 	cursor.execute(userQuery, (username))
@@ -230,8 +240,8 @@ def checkAccount(username, email):
         else:
                 return 'failed'
 
-@app.route('/share/<item_id>', methods = ['GET', 'POST'])
-def share(item_id):
+@app.route('/emailShare/<item_id>', methods = ['GET', 'POST'])
+def emailShare(item_id):
     target_username = request.form['share_to']
     user_exist = search_user(target_username)
     if user_exist:
@@ -248,12 +258,28 @@ def share(item_id):
         return redirect(url_for('home'))
     elif user_exist == False:
         error = "User not found."
-        return redirect(url_for('home', error = error))
+        return rrender_template('error.html', error="usernotfound")
     else:
         error = "Something went wrong."
-        return redirect(url_for('home', error = error))
+        return render_template('error.html', error="generror")
 
-
+@app.route('/share/<item_id>', methods=['GET','POST'])
+def share(item_id):
+	group = request.form['gname']
+	owner = request.form['owner']
+	check = 'SELECT * FROM Member WHERE group_name = %s AND username_creator = %s AND username = %s'
+	cur = conn.cursor()
+	cur.execute(check, (group,owner,session['username']))
+	exist = cur.fetchone()
+	if (exist):
+		insert_query = 'INSERT INTO Share (id,group_name,username) VALUES (%s,%s,%s)'
+		cur.execute(insert_query, (item_id,group,owner))
+		conn.commit()
+		cur.close()
+		return redirect(url_for('home'))
+	else:
+		cur.close()
+		return render_template('error.html', error="share")
 
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
@@ -277,21 +303,23 @@ def add_friend(group_name):
         target_username = request.form['target_username']
         target_group_name = group_name
         username = session['username']
-        if target_username == username:
-            error = "You are the owner of the group!"
-            return redirect(url_for('profile', username = username, error = error))
+
         user_exist = search_user(target_username)
-        if user_exist:
-            inst = "INSERT INTO member VALUES (%s, %s, %s)"
-            cursor = conn.cursor()
-            cursor.execute(inst, (target_username, target_group_name, username))
-            conn.commit()
-            cursor.close()
-            message = 'You have successfully added %s to your group: %s' % (target_username, target_group_name)
-            return redirect(url_for('profile', username = username, message = message))
+        if (user_exist):
+        	cursor = conn.cursor()
+	        alreadyMember = 'SELECT * FROM Member WHERE username=%s AND username_creator=%s AND group_name=%s'
+	        cursor.execute(alreadyMember, (target_username,username,target_group_name))
+	        if (cursor.fetchone()):
+	        	cursor.close()
+	        	return render_template('error.html', error="alreadymember")
+	        else:
+	        	inst = "INSERT INTO member VALUES (%s, %s, %s)"
+	        	cursor.execute(inst, (target_username, target_group_name, username))
+	        	conn.commit()
+	        	cursor.close()
+	        	return redirect(url_for('profile', username = username))
         else:
-            error = "User cannot be found"
-            return redirect(url_for('profile', username = username, error = error))
+	        return render_template('error.html', error="usernotfound")
 
 def get_comments(item_id):
     inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s"
@@ -302,7 +330,7 @@ def get_comments(item_id):
     return comments
 
 def get_tags(item_id):
-    inst = "SELECT username_taggee, username_tagger FROM tag WHERE tag.id = %s"
+    inst = "SELECT username_taggee, username_tagger FROM tag WHERE tag.id = %s AND status=1"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     tags = cursor.fetchall()
@@ -357,14 +385,8 @@ def profile(username):
 									AND m.username <> %s'
 	cur.execute(friendsQuery, (username, username))
 	friendsList = cur.fetchall()
-	groupQuery = 'SELECT group_name,\
-								CASE\
-									WHEN username_creator = %s THEN "Owner"\
-									ELSE "Member"\
-								END AS status\
-								FROM Member\
-								WHERE username = %s'
-	cur.execute(groupQuery, (username,username))
+	groupQuery = 'SELECT * FROM Member WHERE username = %s'
+	cur.execute(groupQuery, (username))
 	groupList = cur.fetchall()
 	postQuery = 'SELECT * FROM Content WHERE username = %s ORDER BY timest DESC'
 	cur.execute(postQuery, (username))

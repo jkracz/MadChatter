@@ -1,0 +1,20 @@
+<html>
+<header>
+	<title>Error Page</title>
+</header>
+<body>
+	<h1>Error</h1>
+	{% if error == "share" %}
+	<p>The post could not be shared with that group because that group does not exist, or you are not a member of it.</p>
+	{% endif %}
+	{% if error == "usernotfound" %}
+	<p>The user you were looking for could not be found.</p>
+	{% endif %}
+	{% if error == "generror" %}
+	<p>An error occurred somewhere.</p>
+	{% endif %}
+	{% if error == "alreadymember" %}
+	<p>That user is already a member of the group.</p>
+	{% endif %}
+	<a href="/home">Back to Home</a>
+</body>

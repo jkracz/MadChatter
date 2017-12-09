@@ -1,11 +1,13 @@
 <html>
 <header>
-	<h1>Create your group</h1>
+	<title>Create your group</title>
 </header>
 <body>
+	<h1>Create Your Group</h1>
 	<form action = '/create_group' method = "POST">
 		 <p>What's your group name? <input type="text" name = "group_name" placeholder="Minimum 4 characters" required minlength = 4/></p>
 		 <p>Enter description of your group <input type="text" name="description" required minlength=1 />
 		 <input type="submit" value = "Create Group" class="buttons"/>
 	</form>
+	<a href="/home">Back to Home</a>
 </body>

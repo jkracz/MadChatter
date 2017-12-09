@@ -13,7 +13,7 @@
         <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
-    
+
     <div class="flex-container">
         <img id="image" src={{content.file_path}}>
         <div class="flex-others">
@@ -22,7 +22,7 @@
                 <h3>Posted by {{content.poster}} at {{content.timest}}</h3>
                 <br>
             </div>
-            
+
             <div id="comments">
                 <h2>Comments</h2>
                 <table>
@@ -42,7 +42,7 @@
                     <input class="item-buttons" type="submit" value="Comment">
                 </form>
             </div>
-            
+
             <div id="tags">
                 <h2>Tags</h2>
                 <table>
@@ -60,12 +60,21 @@
                     <input class="item-buttons" type="submit" value=Tag>
                 </form>
             </div>
-            
+
+            <div id="share">
+                <h2>Share with a Group</h2>
+                <form action="/share/{{content.id}}" method="POST">
+                    <input type="text" name="gname" placeholder="Group Name" minlength=4 required/>
+                    <input type="text" name="owner" placeholder="Group Owner"/>
+                    <input class="item-buttons" type="submit" value="Share">
+                </form>
+            </div>
+
             <div id="share">
                 <h2>Share via Email</h2>
-                <form action="/share/{{content.id}}" method="POST">
-                    <input type="text" name="share_to" placeholder="Username" minlength=4 required/>
-                    <input class="item-buttons" type="submit" value="Share">
+                <form action="/emailShare/{{content.id}}" method="POST">
+                    <input type="text" name="share_to" placeholder="Username"/>
+                    <input class="item-buttons" type="submit" value="Email Share">
                 </form>
             </div>
         </div>
