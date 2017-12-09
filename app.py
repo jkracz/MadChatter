@@ -290,7 +290,6 @@ def add_friend(group_name):
         else:
             error = "User cannot be found"
             return redirect(url_for('profile', username = username, error = error))
-    return render_template('add_friend.html', group_name = group_name)
 
 def get_comments(item_id):
     inst = "SELECT comment.comment_text, comment.timest FROM comment WHERE comment.id = %s"
