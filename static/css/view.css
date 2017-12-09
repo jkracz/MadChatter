@@ -1,0 +1,57 @@
+body{
+    color:darkred;
+}
+h1{
+    margin-botton:0px;
+    font-size:40px;
+}
+
+.item-buttons{
+    background-color:red;
+    border-color:darkred;
+    color:white;
+    padding:5px 10px;
+}
+
+.item-buttons:hover{
+    cursor:pointer;
+}
+
+.flex-container{
+    display:flex;
+    width:98%;
+    flex-direction:row;
+    align-items:flex-start;
+    justify-content:space-between;
+    padding-top:15px;
+}
+
+.flex-others{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-color:#f9dbd9;
+    width:50%;
+}
+
+.flex-others>div{
+    margin-bottom:10px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+#image{
+    padding-left:15px;
+    padding-right:15px;
+    max-width:95%;
+    max-height:95%;
+}
+
+#time-col, #com-user, #taggee{
+    width:150px;
+}
+
+#com-box{
+    width:300px;
+    height:50px;
+}

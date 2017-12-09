@@ -1,6 +1,8 @@
 <html>
 <head>
+    <title>{{content.content_name}}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view.css')}}">
 </head>
 <body>
     <header role="banner">
@@ -11,46 +13,58 @@
         <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
-	<h1>Viewing</h1>
-	<table>
-			<th>Content ID</th>
-			<th>File Path</th>
-			<th>Actions</th>
-				<tr>
-					<td>{{content.id}}</td>
-					<td><img src={{content.file_path}} style="width:400px;height:400px;">}</td>
-					<td>
-						<form action="/comment/{{content.id}}" method="POST">
-        					<input type="text" name="comment" placeholder="Your comment" minlength=1 required/>
-        					<input type="submit" value="Comment"></form>
-        				<form action="/share/{{content.id}}" method="POST">
-        					<input type="text" name="share_to" placeholder="Username" minlength=4 required>
-        					<input type="submit" value="Share"></form>
-        				<form action="/tag/{{content.id}}" method="POST">
-        					<input type="text" name="taggee" placeholder="username"/>
-        					<input type="submit" value=Tag></form>
-				</tr>
-	</table>
-	<br>
-	<table>
-			<th>Time</th>
-			<th>Comment</th>
-			{% for comment in comments %}
-				<tr>
-					<td>{{comment.timest}}</td>
-					<td>{{comment.comment_text}}</td>
-				</tr>
-			{% endfor %}
-	</table>
-	<br>
-	<table>
-			<th>Tag</th>
-			{% for taggee in taggees %}
-			<tr>
-				<td>{{taggee.username_taggee}}</td>
-			</tr>
-			{% endfor %}
-	</table>
-	<br>
+    
+    <div class="flex-container">
+        <img id="image" src={{content.file_path}}>
+        <div class="flex-others">
+            <h1>{{content.content_name}}</h1>
+            
+            <div id="comments">
+                <h2>Comments</h2>
+                <table>
+                    <th id="com-user">Comment By</th>
+                    <th id="time-col">Time</th>
+                    <th>Comment</th>
+                    {% for comment in comments %}
+                    <tr>
+                        <td>{{comment.username}}</td>
+                        <td>{{comment.timest}}</td>
+				        <td>{{comment.comment_text}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <form action="/comment/{{content.id}}" method="POST">
+                    <input id="com-box" type="text" name="comment" placeholder="Your comment" minlength=1 required/>
+                    <input class="item-buttons" type="submit" value="Comment">
+                </form>
+            </div>
+            
+            <div id="tags">
+                <h2>Tags</h2>
+                <table>
+                    <th id="taggee">Tagged in "{{content.content_name}}"</th>
+                    <th>Tagged By</th>
+                    {% for tag in tags %}
+                    <tr>
+                        <td>{{tag.username_taggee}}</td>
+                        <td>{{tag.username_tagger}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <form action="/tag/{{content.id}}" method="POST">
+                    <input type="text" name="taggee" placeholder="username" minlength=1 required/>
+                    <input class="item-buttons" type="submit" value=Tag>
+                </form>
+            </div>
+            
+            <div id="share">
+                <h2>Share via Email</h2>
+                <form action="/share/{{content.id}}" method="POST">
+                    <input type="text" name="share_to" placeholder="Username" minlength=4 required/>
+                    <input class="item-buttons" type="submit" value="Share">
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

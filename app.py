@@ -292,32 +292,33 @@ def add_friend(group_name):
             return redirect(url_for('profile', username = username, error = error))
 
 def get_comments(item_id):
-    inst = "SELECT comment.comment_text, comment.timest FROM comment WHERE comment.id = %s"
+    inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     comments = cursor.fetchall()
     cursor.close()
     return comments
 
-def get_taggees(item_id):
-    inst = "SELECT tag.username_taggee FROM tag WHERE tag.id = %s"
+def get_tags(item_id):
+    inst = "SELECT username_taggee, username_tagger FROM tag WHERE tag.id = %s"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
-    taggees = cursor.fetchall()
+    tags = cursor.fetchall()
     cursor.close()
-    return taggees
+    return tags
 
 @app.route('/view/<item_id>/', methods=['GET'])
 @login_required
 def view(item_id):
-    inst = "SELECT content.id, content.file_path FROM content WHERE content.id = %s"
+    username=session['username']
+    inst = "SELECT id, file_path, content_name, timest, first_name AS poster FROM (SELECT first_name, id, file_path, content_name, timest FROM Person NATURAL JOIN Content WHERE Person.username=Content.username) as t1 WHERE id = %s"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     content = cursor.fetchone()
     comments = get_comments(item_id)
-    taggees = get_taggees(item_id)
+    tags = get_tags(item_id)
     cursor.close()
-    return render_template('view.html', content = content, comments = comments, taggees = taggees)
+    return render_template('view.html', username=username, content = content, comments = comments, tags = tags)
 
 
 
@@ -367,7 +368,7 @@ def profile(username):
 	userPosts = cur.fetchall()
 	personInfoQuery = 'SELECT first_name, last_name FROM Person WHERE username=%s'
 	cur.execute(personInfoQuery, (username))
-	personInfo = cur.fetchall()
+	personInfo = cur.fetchone()
 	cur.close()
 	return render_template('profile.html', username=username, user=personInfo, friends=friendsList, groups=groupList, posts=userPosts)
 

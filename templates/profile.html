@@ -1,8 +1,6 @@
 <html>
 <head>
-    {% for line in user %}
-    <title>{{line.first_name}}'s Profile</title>
-    {% endfor %}
+    <title>{{user.first_name}}'s Profile</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css')}}"/>
 </head>
@@ -19,10 +17,8 @@
     <div class="flex-container">
         <div class="flex-left">
         <div id="me">
-            {% for line in user %}
-            <h1 id="me-name">{{line.first_name}} {{line.last_name}}</h1>
+            <h1 id="me-name">{{user.first_name}} {{user.last_name}}</h1>
             <p id="me-id">@{{username}}</p>
-            {% endfor %}
         </div>
         
         <div>
