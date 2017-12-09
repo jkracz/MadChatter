@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=8889,
+	port=3306,
 	user='root',
-	password='root',
+	password='',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -245,20 +245,35 @@ def emailShare(item_id):
     target_username = request.form['share_to']
     user_exist = search_user(target_username)
     if user_exist:
-        cursor = conn.cursor()
+       
+     
+        
+        ##get email
+        
         inst = "SELECT email FROM person WHERE username = %s"
+        cursor = conn.cursor()
         cursor.execute(inst, (target_username))
         data = cursor.fetchone()
-        cursor.close()
         email = data['email']
+        cursor.close()
+        
+        ##get filepath
+        get_filepath = "SELECT file_path FROM content WHERE content.id = %s"
+        cursor = conn.cursor()
+        cursor.execute(get_filepath, (item_id))
+        file_data = cursor.fetchone()
+        cursor.close()
+        file_path = file_data['file_path']
+        ##current user
         username = session['username']
-        composed_message = "%s shared the following item: %s with you" % (username, item_id)
+        
+        composed_message = "%s shared the following item with you!\nLink:%s"  % (username, file_path)
         em.send_email(composed_message, email)
         message = "You have shared %s with %s" % (item_id, target_username)
         return redirect(url_for('home'))
     elif user_exist == False:
         error = "User not found."
-        return rrender_template('error.html', error="usernotfound")
+        return render_template('error.html', error="usernotfound")
     else:
         error = "Something went wrong."
         return render_template('error.html', error="generror")
@@ -306,20 +321,20 @@ def add_friend(group_name):
 
         user_exist = search_user(target_username)
         if (user_exist):
-        	cursor = conn.cursor()
-	        alreadyMember = 'SELECT * FROM Member WHERE username=%s AND username_creator=%s AND group_name=%s'
-	        cursor.execute(alreadyMember, (target_username,username,target_group_name))
-	        if (cursor.fetchone()):
-	        	cursor.close()
-	        	return render_template('error.html', error="alreadymember")
-	        else:
-	        	inst = "INSERT INTO member VALUES (%s, %s, %s)"
-	        	cursor.execute(inst, (target_username, target_group_name, username))
-	        	conn.commit()
-	        	cursor.close()
-	        	return redirect(url_for('profile', username = username))
+            cursor = conn.cursor()
+            alreadyMember = 'SELECT * FROM Member WHERE username=%s AND username_creator=%s AND group_name=%s'
+            cursor.execute(alreadyMember, (target_username,username,target_group_name))
+            if (cursor.fetchone()):
+                    cursor.close()
+                    return render_template('error.html', error="alreadymember")
+            else:
+                    inst = "INSERT INTO member VALUES (%s, %s, %s)"
+                    cursor.execute(inst, (target_username, target_group_name, username))
+                    conn.commit()
+                    cursor.close()
+                    return redirect(url_for('profile', username = username))
         else:
-	        return render_template('error.html', error="usernotfound")
+            return render_template('error.html', error="usernotfound")
 
 def get_comments(item_id):
     inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s"
