@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=8889,
+	port=3306,
 	user='root',
-	password='root',
+	password='',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
