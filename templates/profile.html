@@ -13,14 +13,14 @@
         <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
-    
+
     <div class="flex-container">
         <div class="flex-left">
         <div id="me">
             <h1 id="me-name">{{user.first_name}} {{user.last_name}}</h1>
             <p id="me-id">@{{username}}</p>
         </div>
-        
+
         <div>
             <h2>Friends List</h2>
             <table>
@@ -50,17 +50,17 @@
                 <td>{{line.status}}</td>
                 <td><form action = '/add_friend/{{line.group_name}}' method = "POST">
 		 			<input type="text" name = "target_username" placeholder="Username" required/></p>
-		 			<input type="submit" value = "Add to {{line.group_name}}" class="buttons"/>
+		 			<input type="submit" value = "Add friend to {{line.group_name}}" class="buttons"/>
 					</form>
 				</td>
-                
+
             </tr>
             {% endfor %}
             </table>
         </div>
         <div id="group-butt">
             <a href="/create_group"><button type="button" class="item-buttons">Create Group</button></a>
-            
+
         </div>
     </div>
         <div>
@@ -75,7 +75,7 @@
                 </div>
                 <div id="post-butt">
                     <a href="/delete/{{line.id}}"><button type="button" class="item-buttons">Delete</button></a>
-            
+
                 </div>
             </div>
             {% endfor %}

@@ -199,7 +199,9 @@ def create_group():
             return render_template('friend_group.html', error = error)
         else:
             insert_query = 'INSERT INTO friendgroup VALUES (%s, %s, %s)'
+            memberInsert = 'INSERT INTO Member (username,group_name,username_creator) VALUES (%s,%s,%s)'
             cursor.execute(insert_query, (group_name, username, description))
+            cursor.execute(memberInsert, (username,group_name,username))
             conn.commit()
             cursor.close()
             message = 'You have successfully created your friendgroup: %s' % group_name
@@ -347,12 +349,13 @@ def logout():
 @app.route('/profile/<username>')
 def profile(username):
 	cur = conn.cursor();
-	friendsQuery = 'SELECT m.username, p.first_name, p.last_name FROM Member AS m\
+	friendsQuery = 'SELECT DISTINCT m.username, p.first_name, p.last_name FROM Member AS m\
 									JOIN Person AS p ON (m.username = p.username)\
 									WHERE (group_name,username_creator) IN (SELECT group_name,username_creator\
 											                                     FROM Member\
-											                                     WHERE username = %s)'
-	cur.execute(friendsQuery, (username))
+											                                     WHERE username = %s)\
+									AND m.username <> %s'
+	cur.execute(friendsQuery, (username, username))
 	friendsList = cur.fetchall()
 	groupQuery = 'SELECT group_name,\
 								CASE\
