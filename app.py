@@ -203,7 +203,7 @@ def create_group():
             conn.commit()
             cursor.close()
             message = 'You have successfully created your friendgroup: %s' % group_name
-            return render_template('friend_group.html', message = message)
+            return redirect(url_for('profile', username = username))
     return render_template('create_group.html')
 
 #when user resets password, function checks for associated account and mail password
