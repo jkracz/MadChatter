@@ -39,11 +39,7 @@
                     <p>{{line.timest}}</p>
                 </div>
                 <div>
-                    <img id="image" src={{line.file_path}}>
-                </div>
-                <div id="post-butt">
-                    <a href="/view/{{line.id}}"><button type="button" class="item-buttons">View</button></a>
-                    <a href="/share_via_email/{{line.id}}"><button type="button" class="item-buttons">Share</button></a>
+                    <a href="/view/{{line.id}}"><img id="image" src={{line.file_path}}></a>
                 </div>
                 <div>
                     <form action="comment/{{line.id}}" method="POST">
@@ -58,7 +54,7 @@
                 <div>
                     <form action="share/{{line.id}}" method="GET">
         			<input type="text" name="share_to" placeholder="Username" minlength=4 required>
-        			<input type="submit" value="Share"></form>
+        			<input class="item-buttons" type="submit" value="Share"></form>
                 </div>
             </div>
             {% endfor %}

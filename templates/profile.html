@@ -3,7 +3,6 @@
     {% for line in user %}
     <title>{{line.first_name}}'s Profile</title>
     {% endfor %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/hom_prof.css')}}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css')}}"/>
 </head>
@@ -71,10 +70,9 @@
                     <p>{{line.timest}}</p>
                 </div>
                 <div>
-                    <img id="image" src={{line.file_path}}>
+                    <a href="/view/{{line.id}}"><img id="image" src={{line.file_path}}></a>
                 </div>
                 <div id="post-butt">
-                    <a href="/view/{{line.id}}"><button type="button" class="item-buttons">View</button></a>
                     <a href="/delete/{{line.id}}"><button type="button" class="item-buttons">Delete</button></a>
             
                 </div>

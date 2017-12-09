@@ -42,8 +42,8 @@ h1{
 }
 
 .post-container>div{
-    padding-top:5px;
     align-items:baseline;
+    margin-bottom:3px;
 }
 
 .box{
@@ -58,4 +58,5 @@ h1{
 #image{
     max-width:95%;
     max-height:95%;
+    padding-bottom:8px;
 }
