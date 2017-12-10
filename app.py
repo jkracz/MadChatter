@@ -163,10 +163,9 @@ def change_password():
             cursor.close()
             return redirect(url_for('home'))
         elif (new_password != confirm_password):
-            ##need to implement error message
-            return redirect(url_for('login'))
+            return redirect(url_for('change_password'))
         else:
-            return rediret(url_for('login'))
+            return redirect(url_for('profile', username = username))
     return render_template('change_password.html')
 
 
