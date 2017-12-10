@@ -75,7 +75,7 @@ def register():
 def home():
 	username = session['username']
 	cursor = conn.cursor();
-	postQuery = 'SELECT id, timest, file_path, content_name FROM content\
+	postQuery = 'SELECT id, timest, file_path, content_name, first_name, last_name FROM content NATURAL JOIN person\
 								WHERE username = %s\
 								OR public = 1\
 								OR username IN (SELECT DISTINCT m.username FROM Member AS m\
@@ -337,7 +337,7 @@ def add_friend(group_name):
             return render_template('error.html', error="usernotfound")
 
 def get_comments(item_id):
-    inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s ORDER BY timest"
+    inst = "SELECT comment_text, timest, first_name, last_name FROM (SELECT id, username, comment_text, timest, first_name, last_name FROM comment NATURAL JOIN person WHERE comment.username=person.username) as t1 WHERE id = %s ORDER BY timest"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     comments = cursor.fetchall()
@@ -356,7 +356,7 @@ def get_tags(item_id):
 @login_required
 def view(item_id):
     username=session['username']
-    inst = "SELECT id, file_path, content_name, timest, first_name AS poster FROM (SELECT first_name, id, file_path, content_name, timest FROM Person NATURAL JOIN Content WHERE Person.username=Content.username) as t1 WHERE id = %s"
+    inst = "SELECT id, file_path, content_name, timest, first_name, last_name FROM (SELECT first_name, last_name, id, file_path, content_name, timest FROM Person NATURAL JOIN Content WHERE Person.username=Content.username) as t1 WHERE id = %s"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     content = cursor.fetchone()

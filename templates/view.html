@@ -15,68 +15,54 @@
     </header>
 
     <div class="flex-container">
-        <div class="image-cont">
+        <div class="left-cont">
             <div><img id="image" src={{content.file_path}}></div>
+            <div class="flex-share">
+                <form id="group-share" action="/share/{{content.id}}" method="POST">
+                    <div><h2>Share with a Group</h2></div>
+                        <div><input type="text" name="gname" placeholder="Group Name" minlength=4 required/></div>
+                        <div><input type="text" name="owner" placeholder="Group Owner"/></div>
+                        <div><input class="item-buttons" type="submit" value="Share"></div>
+                </form>
+                <form id="email-share" action="/emailShare/{{content.id}}" method="POST">
+                    <div><h2>Share via Email</h2></div>
+                    <div><input type="text" name="share_to" placeholder="Username"/></div>
+                    <div><input class="item-buttons" type="submit" value="Email Share"></div>
+                </form>
+            </div>
         </div>
         <div class="flex-others">
             <div class="con_title">
                 <h1>{{content.content_name}}</h1>
-                <h3>Posted by {{content.poster}} at {{content.timest}}</h3>
+                <h3>Posted by {{content.first_name}} {{content.last_name}} at {{content.timest}}</h3>
                 <br>
             </div>
-
-            <div id="comments">
-                <h2>Comments</h2>
-                <table>
-                    <th id="com-user">Comment By</th>
-                    <th id="time-col">Time</th>
-                    <th>Comment</th>
-                    {% for comment in comments %}
-                    <tr>
-                        <td>{{comment.username}}</td>
-                        <td>{{comment.timest}}</td>
-				        <td>{{comment.comment_text}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                <form action="/comment/{{content.id}}" method="POST">
-                    <input id="com-box" type="text" name="comment" placeholder="Your comment" minlength=1 required/>
+            <div><h2><u>Comments</u></h2></div>
+            <div class="flex-comments">
+                {%for comment in comments %}
+                <div>
+                    <p><b>{{comment.first_name}} {{comment.last_name}} ({{comment.timest}}):</b> {{comment.comment_text}}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div>
+                <form id="sub-com" action="/comment/{{content.id}}" method="POST">
+                    <input type="text" name="comment" placeholder="Your comment" minlength=1 required/>
                     <input class="item-buttons" type="submit" value="Comment">
                 </form>
             </div>
-
-            <div id="tags">
-                <h2>Tags</h2>
-                <table>
-                    <th id="taggee">Tagged in "{{content.content_name}}"</th>
-                    <th>Tagged By</th>
-                    {% for tag in tags %}
-                    <tr>
-                        <td>{{tag.username_taggee}}</td>
-                        <td>{{tag.username_tagger}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                <form action="/tag/{{content.id}}" method="POST">
+            <div><h2><u>Tags</u></h2></div>
+            <div class="flex-tags">
+                {% for tag in tags %}
+                <div>
+                    <p><b>{{tag.username_taggee}}</b> tagged by {{tag.username_tagger}}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div>
+                <form id="sub-tag" action="/tag/{{content.id}}" method="POST">
                     <input type="text" name="taggee" placeholder="username" minlength=1 required/>
                     <input class="item-buttons" type="submit" value=Tag>
-                </form>
-            </div>
-
-            <div id="share">
-                <h2>Share with a Group</h2>
-                <form action="/share/{{content.id}}" method="POST">
-                    <input type="text" name="gname" placeholder="Group Name" minlength=4 required/>
-                    <input type="text" name="owner" placeholder="Group Owner"/>
-                    <input class="item-buttons" type="submit" value="Share">
-                </form>
-            </div>
-
-            <div id="share">
-                <h2>Share via Email</h2>
-                <form action="/emailShare/{{content.id}}" method="POST">
-                    <input type="text" name="share_to" placeholder="Username"/>
-                    <input class="item-buttons" type="submit" value="Email Share">
                 </form>
             </div>
         </div>

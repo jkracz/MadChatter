@@ -37,14 +37,14 @@
             <div class="post-container">
                 <div>
                     <h1>{{line.content_name}}</h1>
-                    <p>{{line.timest}}</p>
+                    <p>Posted by {{line.first_name}} {{line.last_name}} at {{line.timest}}</p><br>
                 </div>
                 <div>
                     <a href="/view/{{line.id}}"><img id="image" src={{line.file_path}}></a>
                 </div>
                 <div>
                     <form action="comment/{{line.id}}" method="POST">
-	        						<input type="text" name="comment" placeholder="Your comment"/>
+	        			<input type="text" name="comment" placeholder="Your comment"/>
 	                    <input class="item-buttons" type="submit" value="Comment">
 	                  </form>
                 </div>
@@ -55,16 +55,16 @@
 	                  </form>
                 </div>
                 <div>
-	                	<form action="/share/{{line.id}}" method="POST">
-		                	<input type="text" name="gname" placeholder="Group Name" minlength=4 required/>
-		                	<input type="text" name="owner" placeholder="Group Owner"/>
-		                	<input class="item-buttons" type="submit" value="Share">
-                		</form>
+	               <form action="/share/{{line.id}}" method="POST">
+                        <input type="text" name="gname" placeholder="Group Name" minlength=4 required>
+                        <input type="text" name="owner" placeholder="Group Owner"/>
+                        <input class="item-buttons" type="submit" value="Share">
+                    </form>
                 </div>
                 <div>
-                    	<form action="/emailShare/{{line.id}}" method="POST">
-			        			<input type="text" name="share_to" placeholder="Username" minlength=4 required>
-			        			<input class="item-buttons" type="submit" value="Email Share">
+                    <form action="/emailShare/{{line.id}}" method="POST">
+			        	<input type="text" name="share_to" placeholder="Username" minlength=4 required/>
+			        	<input class="item-buttons" type="submit" value="Email Share">
 			        	</form>
                 </div>
             </div>

@@ -4,22 +4,18 @@ body{
 h1, h3{
     margin-bottom:0px;
 }
-
 h1{
     font-size:40px;
 }
-
 .item-buttons{
     background-color:red;
     border-color:darkred;
     color:white;
     padding:5px 10px;
 }
-
 .item-buttons:hover{
     cursor:pointer;
 }
-
 .flex-container{
     display:flex;
     width:98%;
@@ -28,45 +24,89 @@ h1{
     justify-content:space-between;
     padding-top:15px;
 }
-
 .flex-others{
     display:flex;
     flex-direction:column;
     justify-content:center;
     background-color:#f9dbd9;
     width:50%;
+    padding-left:2%;
+    padding-right:2%;
 }
-
-#comments, #tags, #share{
-    margin-bottom:10px;
-    padding-left:10px;
-    padding-right:10px;
-    background-color:#ffefef;
+.flex-share{
+    display:flex;
+    flex-direction:row;
 }
-
 .con_title{
     display:flex;
     flex-direction:column;
 }
-
-.image-cont{
+.left-cont{
     display:flex;
     flex-direction:column;
     align-content:center;
+    align-items:center;
     padding-left:15px;
     padding-right:15px;
     width:50%;
+}
+
+.flex-comments{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
+    align-content:flex-start;
+}
+
+.flex-comments>div{
+    width:100%;
+    text-align:left;
+    background-color:#ffefef;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.flex-comments>div>p{
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+.flex-tags{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
+    align-content:flex-start;
+}
+
+.flex-tags>div{
+    width:100%;
+    text-align:left;
+    background-color:#ffefef;
+    padding-left:5px;
+    padding-right:5px;
+}
+
+.flex-tags>div>p{
+    margin-top:5px;
+    margin-bottom:5px;
 }
 
 #image{
     max-width:100%;
 }
 
-#time-col, #com-user, #taggee{
-    width:150px;
+
+#group-share, #email-share{
+    padding-left:15px;
+    padding-right:15px;
 }
 
-#com-box{
-    width:300px;
-    height:50px;
+#group-share>div, #email-share>div{
+    padding-bottom:5px;
+}
+
+#sub-com, #sub-tag{
+    margin-top:7px;
 }
