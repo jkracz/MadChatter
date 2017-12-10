@@ -196,8 +196,8 @@ def delete(item_id):
 
 @app.route('/create_group', methods = ['GET', 'POST'])
 def create_group():
+    username = session['username']
     if request.method == 'POST':
-        username = session['username']
         group_name = request.form['group_name']
         description = request.form['description']
         check_query = "SELECT * FROM friendgroup WHERE username = %s AND group_name = %s"
@@ -216,7 +216,7 @@ def create_group():
             cursor.close()
             message = 'You have successfully created your friendgroup: %s' % group_name
             return redirect(url_for('profile', username = username))
-    return render_template('create_group.html')
+    return render_template('create_group.html', username=username)
 
 #when user resets password, function checks for associated account and mail password
 def checkAccount(username, email):

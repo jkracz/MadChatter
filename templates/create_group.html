@@ -1,12 +1,21 @@
 <html>
 <header>
-	<title>Create your group</title>
+	<title>Create Group</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
 </header>
-<body>
-	<h1>Create Your Group</h1>
+<body style="color:darkred;">
+    <header role="banner">
+        <h2 id="logo">Mad Chatter</h2>
+        <a href="/home"><button type="button" class="nav-buttons">Home</button></a>
+        <a href="/profile/{{username}}"><button type="button" class="nav-buttons">My Profile</button></a>
+        <a href="/notif"><button type="button" class="nav-buttons">Notifications</button></a>
+        <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
+        <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
+    </header>
+	<h1 style="font-size:40px;">Create Your Group</h1>
 	<form action = '/create_group' method = "POST">
 		 <p>What's your group name? <input type="text" name = "group_name" placeholder="Minimum 4 characters" required minlength = 4/></p>
-		 <p>Enter description of your group <input type="text" name="description" required minlength=1 />
+        <p>Enter description of your group <input type="text" name="description" required minlength=1 /></p><br>
 		 <input type="submit" value = "Create Group" class="buttons"/>
 	</form>
 	<a href="/home">Back to Home</a>
