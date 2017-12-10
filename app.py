@@ -458,7 +458,7 @@ def denyTag(item_id):
 @login_required
 def notif():
 	username = session['username']
-	tagsQuery = 'SELECT t.id, file_path, username_tagger FROM Content AS c\
+	tagsQuery = 'SELECT t.id, file_path, username_tagger, content_name FROM Content AS c\
 								JOIN Tag AS t ON (c.id = t.id) WHERE username_taggee=%s AND status = 0 ORDER BY t.timest DESC'
 	cur = conn.cursor()
 	cur.execute(tagsQuery, (username))

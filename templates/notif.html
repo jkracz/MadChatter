@@ -1,8 +1,8 @@
 <html>
 <head>
     <title>Notifications</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/hom_prof.css')}}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notif.css')}}"/>
 </head>
 <body>
     <header role="banner">
@@ -13,24 +13,23 @@
         <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
-
-    <h2>Pending Tags</h2>
-    <table>
-        <th>Content</th>
-        <th>Tagged By</th>
-
-    {% for line in pendingTags %}
-        <tr>
-            <td><img src={{line.file_path}} style="width:400px;height:400px;"></td>
-            <td>{{line.username_tagger}}</td>
-            <td><form action="/acceptTag/{{line.id}}" method="POST">
-                    <input type="submit" value="Accept"/></form></td>
-            <td><form action="/denyTag/{{line.id}}" method="POST">
-                    <input type="submit" value="Deny"/></form></td>
-
-        </tr>
-    {% endfor %}
-    </table>
-
-</body>
+    <h1>Pending Tags</h1>
+    <div class="flex-container">
+        {% for line in pendingTags %}
+        <div class="post-container">
+            <div><h2>{{line.content_name}}</h2></div>
+            <div><img id="image" src="{{line.file_path}}"></div>
+            <p>Tagged by {{line.username_tagger}}</p>
+            <div class="button-flex">
+                <form action="/acceptTag/{{line.id}}" method="POST">
+                    <input type="submit" value="Accept" class="buttons"/>
+                </form>
+                <form action="/denyTag/{{line.id}}" method="POST">
+                    <input type="submit" value="Deny" class="buttons"/>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    </body>
 </html>

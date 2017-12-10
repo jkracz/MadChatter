@@ -1,0 +1,39 @@
+h1{
+    color:darkred;
+    font-size:40px;
+}
+
+h2{
+    color:darkred;
+    font-size:30px;
+}
+
+.flex-container{
+    display:flex;
+    flex-direction:row-reverse;
+    justify-content:center;
+    align-content:center;
+}
+
+.post-container{
+    display:flex;
+    flex-direction:column;
+    width:50%;
+    background-color:#f9dbd9;
+    padding:15px;
+    margin:10px;
+}
+
+.button-flex{
+    display:flex;
+    flex-diretion:row;
+    justify-content:center;
+}
+
+.button-flex>form>input{
+    margin:5px;
+}
+
+#image{
+    max-width:100%;
+}
