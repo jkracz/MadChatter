@@ -1,9 +1,18 @@
 <html>
 <header>
 	<title>Error Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_butt_nav_logo.css')}}">
 </header>
-<body>
-	<h1>Error</h1>
+<body style="color:darkred;">
+    <header role="banner">
+        <h2 id="logo">Mad Chatter</h2>
+        <a href="/home"><button type="button" class="nav-buttons">Home</button></a>
+        <a href="/profile/{{username}}"><button type="button" class="nav-buttons">My Profile</button></a>
+        <a href="/notif"><button type="button" class="nav-buttons">Notifications</button></a>
+        <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
+        <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
+    </header>
+	<h1 style="font-size:40px;">Error</h1>
 	{% if error == "share" %}
 	<p>The post could not be shared with that group because that group does not exist, or you are not a member of it.</p>
 	{% endif %}
