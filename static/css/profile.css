@@ -23,17 +23,20 @@ h1{
     width:95%;
     flex-direction:row;
     align-items:flex-start;
+    align-self:center;
     justify-content:space-between;
+    margin-left:30px;
     padding-top:45px;
-    padding-left:30px;
 }
 
 .flex-left{
     display:flex;
     flex-direction:column;
+    align-items:center;
     justify-content:space-between;
     background-color:#f9dbd9;
     padding:15px;
+    width:25%;
 }
 
 .post-container{
@@ -47,7 +50,7 @@ h1{
 
 .flex-left>div{
     background-color:white;
-    width:275px;
+    width:100%;
 }
 
 .flex-left>#me{
@@ -73,4 +76,8 @@ h1{
 #group-butt{
     background-color:#f9dbd9;
     padding-top:5px;
+}
+
+#post-con{
+    width:75%;
 }

@@ -49,11 +49,17 @@ h1{
     flex-direction:column;
 }
 
-#image{
+.image-cont{
+    display:flex;
+    flex-direction:column;
+    align-content:center;
     padding-left:15px;
     padding-right:15px;
-    max-width:50%;
-    max-height:95%;
+    width:50%;
+}
+
+#image{
+    max-width:100%;
 }
 
 #time-col, #com-user, #taggee{

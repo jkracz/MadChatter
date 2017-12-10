@@ -13,14 +13,16 @@
         <a href="/change_password"><button type="button" class="nav-buttons">Settings</button></a>
         <a href="/logout"><button type="button" class="nav-buttons">Logout</button></a>
     </header>
+    <form action="/post" method="POST">
     <div class="flex-container">
         <div class="left">
-            <form action="/post" method="POST">
-                {%for line in user %}
-                <div class="box">
-                    <h1 id="welcome"><b>Welcome {{line.first_name}}</b></h1>
-                {% endfor %}
-                    <h2 style="color:#db8585"><i>Share something with us!</i></h2>
+            <div>
+                <h1 id="welcome"><b>Welcome {{user.first_name}}</b></h1>
+            </div>
+            <div>
+                <h2 style="color:#db8585"><i>Share something with us!</i></h2>
+            </div>
+            <div>
                     <p>Title</p>
                     <input class="enter-info" type="text" name = "description" placeholder="Give it a name!" required/> </br>
                     <p>URL</p>
@@ -28,10 +30,9 @@
                     <input type="checkbox" id="makePublic" name= "makePublic" value="1" placeholder="Public"/>
 	                <label for="makePublic">Make it public</label><br><br>
 	                <input type="submit" value = Post class="buttons"/>
-                </div>
-            </form>
         </div>
-        <div>
+        </div>
+        <div id="post-con">
             {% for line in posts %}
             <div class="post-container">
                 <div>
@@ -70,3 +71,5 @@
         </div>
     </div>
     </form>
+    </body>
+</html>
