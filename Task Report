@@ -48,3 +48,5 @@ $ Implement tag requests
 $ implement tagging
 $ implement user profiles
 $ Update SQL tables (add istemppass to user, ON DELETE CASCADE)
+$ Create intergroup sharing feature
+$ Created a way of handling errors that would result from bad user input

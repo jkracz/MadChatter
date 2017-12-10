@@ -245,20 +245,35 @@ def emailShare(item_id):
     target_username = request.form['share_to']
     user_exist = search_user(target_username)
     if user_exist:
-        cursor = conn.cursor()
+       
+     
+        
+        ##get email
+        
         inst = "SELECT email FROM person WHERE username = %s"
+        cursor = conn.cursor()
         cursor.execute(inst, (target_username))
         data = cursor.fetchone()
-        cursor.close()
         email = data['email']
+        cursor.close()
+        
+        ##get filepath
+        get_filepath = "SELECT file_path FROM content WHERE content.id = %s"
+        cursor = conn.cursor()
+        cursor.execute(get_filepath, (item_id))
+        file_data = cursor.fetchone()
+        cursor.close()
+        file_path = file_data['file_path']
+        ##current user
         username = session['username']
-        composed_message = "%s shared the following item: %s with you" % (username, item_id)
+        
+        composed_message = "%s shared the following item with you!\nLink:%s"  % (username, file_path)
         em.send_email(composed_message, email)
         message = "You have shared %s with %s" % (item_id, target_username)
         return redirect(url_for('home'))
     elif user_exist == False:
         error = "User not found."
-        return rrender_template('error.html', error="usernotfound")
+        return render_template('error.html', error="usernotfound")
     else:
         error = "Something went wrong."
         return render_template('error.html', error="generror")
@@ -306,23 +321,23 @@ def add_friend(group_name):
 
         user_exist = search_user(target_username)
         if (user_exist):
-        	cursor = conn.cursor()
-	        alreadyMember = 'SELECT * FROM Member WHERE username=%s AND username_creator=%s AND group_name=%s'
-	        cursor.execute(alreadyMember, (target_username,username,target_group_name))
-	        if (cursor.fetchone()):
-	        	cursor.close()
-	        	return render_template('error.html', error="alreadymember")
-	        else:
-	        	inst = "INSERT INTO member VALUES (%s, %s, %s)"
-	        	cursor.execute(inst, (target_username, target_group_name, username))
-	        	conn.commit()
-	        	cursor.close()
-	        	return redirect(url_for('profile', username = username))
+            cursor = conn.cursor()
+            alreadyMember = 'SELECT * FROM Member WHERE username=%s AND username_creator=%s AND group_name=%s'
+            cursor.execute(alreadyMember, (target_username,username,target_group_name))
+            if (cursor.fetchone()):
+                    cursor.close()
+                    return render_template('error.html', error="alreadymember")
+            else:
+                    inst = "INSERT INTO member VALUES (%s, %s, %s)"
+                    cursor.execute(inst, (target_username, target_group_name, username))
+                    conn.commit()
+                    cursor.close()
+                    return redirect(url_for('profile', username = username))
         else:
-	        return render_template('error.html', error="usernotfound")
+            return render_template('error.html', error="usernotfound")
 
 def get_comments(item_id):
-    inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s"
+    inst = "SELECT username, comment_text, timest FROM comment WHERE comment.id = %s ORDER BY timest"
     cursor = conn.cursor()
     cursor.execute(inst, (item_id))
     comments = cursor.fetchall()
@@ -401,12 +416,23 @@ def profile(username):
 def tag(item_id):
 	tagger = session['username']
 	taggee = request.form['taggee']
-	addTag = 'INSERT INTO Tag (id,username_tagger,username_taggee) VALUES (%s, %s, %s)'
-	cur = conn.cursor();
-	cur.execute(addTag, (item_id,tagger,taggee))
-	conn.commit()
-	cur.close()
-	return redirect(url_for('home'))
+	cur = conn.cursor()
+	if (search_user(taggee)):
+		tagged = 'SELECT * FROM Tag WHERE id=%s AND username_taggee=%s'
+		cur.execute(tagged, (item_id,taggee))
+		isTagged = cur.fetchone()
+		if (isTagged):
+			cur.close()
+			return render_template('error.html', error="alreadytagged")
+		else:
+			addTag = 'INSERT INTO Tag (id,username_tagger,username_taggee) VALUES (%s, %s, %s)'
+			cur.execute(addTag, (item_id,tagger,taggee))
+			conn.commit()
+			cur.close()
+			return redirect(url_for('home'))
+	else:
+		cur.close()
+		return render_template('error.html', error="usernotfound")
 
 @app.route('/acceptTag/<int:item_id>', methods=['POST'])
 def acceptTag(item_id):
