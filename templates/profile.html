@@ -20,51 +20,36 @@
             <h1 id="me-name">{{user.first_name}} {{user.last_name}}</h1>
             <p id="me-id">@{{username}}</p>
         </div>
-
-        <div>
-            <h2>Friends List</h2>
-            <table>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-
+        <div class="friend-flex">
+            <div><h2><u>Friends List</u></h2><br></div>
             {% for line in friends %}
-            <tr>
-                <td>{{line.username}}</td>
-                <td>{{line.first_name}}</td>
-                <td>{{line.last_name}}</td>
-            </tr>
+            <div>
+                <p><b>{{line.first_name}} {{line.last_name}}</b> (@{{line.username}})</p>
+            </div>
             {% endfor %}
-            </table>
         </div>
         <br>
-        <div>
-            <h2>Groups</h2>
-            <table>
-                <th>Group</th>
-                <th>Owner</th>
-
+        <div class="group-flex">
+            <div><h2><u>Groups</u></h2><br></div>
             {% for line in groups %}
-            <tr>
-                <td>{{line.group_name}}</td>
-                <td>{{line.username_creator}}</td>
+            <div class="indiv-group">
+                <p><b>{{line.group_name}}</b> owned by @{{line.username_creator}}</p>
                 {% if line.username_creator==username %}
-                <td><form action = '/add_friend/{{line.group_name}}' method = "POST">
-		 			<input type="text" name = "target_username" placeholder="Username" required/></p>
-		 			<input type="submit" value = "Add friend to {{line.group_name}}" class="buttons"/>
-					</form>
-				</td>
+                <p class="add-friend-txt">Add a New Friend</p>
+                <form action = '/add_friend/{{line.group_name}}' method = 'POST'>
+                    <input type="text" name = "target_username" placeholder="username" required/>
+                    <input type="submit" value="Add User" class="item-buttons"/>
+                </form>
                 {% endif %}
-            </tr>
+            </div>
             {% endfor %}
-            </table>
         </div>
         <div id="group-butt">
             <a href="/create_group"><button type="button" class="item-buttons">Create Group</button></a>
 
         </div>
     </div>
-        <div id="post-con">
+        <div class="post-con">
             {% for line in posts %}
             <div class="post-container">
                 <div>

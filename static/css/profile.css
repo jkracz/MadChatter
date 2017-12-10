@@ -48,8 +48,39 @@ h1{
     margin-left:10px;
 }
 
-.flex-left>div{
+.friend-flex{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-color:#ffefef;
+    color:darkred;
+    padding-bottom:10px;
+}
+
+.friend-flex>div>p{
+    margin-bottom:5px;
+    margin-top:5px;
+}
+
+.group-flex{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    background-color:#ffefef;
+    color:darkred;
+    padding-bottom:10px;
+}
+
+.indiv-group{
     background-color:white;
+    margin:8px;
+}
+
+.add-friend-txt{
+    margin-bottom:3px;
+}
+
+.flex-left>div{
     width:100%;
 }
 
@@ -78,6 +109,8 @@ h1{
     padding-top:5px;
 }
 
-#post-con{
+.post-con{
+    display:flex;
+    flex-direction:column-reverse;
     width:75%;
 }

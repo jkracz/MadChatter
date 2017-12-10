@@ -61,6 +61,8 @@ h1{
     padding-bottom:8px;
 }
 
-#post-con{
+.post-con{
+    display:flex;
+    flex-direction:column-reverse;
     width:75%;
 }
