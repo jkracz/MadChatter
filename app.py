@@ -12,9 +12,9 @@ app = Flask(__name__)
 
 #Connect to MadChatter DB
 conn = pymysql.connect(host='localhost',
-	port=3306,
+	port=8889,
 	user='root',
-	password='',
+	password='root',
 	db='MadChatter',
 	charset='utf8mb4',
 	cursorclass=pymysql.cursors.DictCursor)
@@ -85,7 +85,7 @@ def home():
 								OR id IN (SELECT id FROM Share AS s\
 													JOIN Member AS m ON (s.group_name = m.group_name AND s.username = m.username_creator)\
 													WHERE m.username=%s)\
-								ORDER BY timest DESC'
+								ORDER BY timest'
 	cursor.execute(postQuery, (username,username,username))
 	postData = cursor.fetchall()
 	userQuery = 'SELECT first_name FROM Person WHERE username=%s'
@@ -112,8 +112,7 @@ def registerAuth():
 	data = cursor.fetchone()
 	err = None
 	if(data):
-		error = "The user "+username+" already exists"
-		return render_template('register.html', error = err)
+		return render_template('register.html', error = True)
 	else:
 		ins = 'INSERT INTO person (username,password,first_name,last_name,email) VALUES(%s, sha1(%s), %s, %s, %s)'
 		cursor.execute(ins, (username, password.encode(), fname, lname, email))
@@ -163,10 +162,10 @@ def change_password():
             cursor.close()
             return redirect(url_for('home'))
         elif (new_password != confirm_password):
-            return redirect(url_for('change_password'))
+            return render_template('change_password.html', username=session['username'], passNoMatch=True)
         else:
-            return redirect(url_for('profile', username = username))
-    return render_template('change_password.html')
+            return render_template('change_password.html', username=session['username'], incorrectPass=True)
+    return render_template('change_password.html', username=session['username'])
 
 
 @app.route('/forgot_password')
@@ -204,8 +203,7 @@ def create_group():
         cursor.execute(check_query, (username, group_name))
         already_exists = cursor.fetchone()
         if already_exists:
-            error = 'This group already exists'
-            return render_template('friend_group.html', error = error)
+            return render_template('error.html', error = "groupExists", username=username)
         else:
             insert_query = 'INSERT INTO friendgroup VALUES (%s, %s, %s)'
             memberInsert = 'INSERT INTO Member (username,group_name,username_creator) VALUES (%s,%s,%s)'
@@ -244,18 +242,18 @@ def emailShare(item_id):
     target_username = request.form['share_to']
     user_exist = search_user(target_username)
     if user_exist:
-       
-     
-        
+
+
+
         ##get email
-        
+
         inst = "SELECT email FROM person WHERE username = %s"
         cursor = conn.cursor()
         cursor.execute(inst, (target_username))
         data = cursor.fetchone()
         email = data['email']
         cursor.close()
-        
+
         ##get filepath
         get_filepath = "SELECT file_path FROM content WHERE content.id = %s"
         cursor = conn.cursor()
@@ -265,17 +263,15 @@ def emailShare(item_id):
         file_path = file_data['file_path']
         ##current user
         username = session['username']
-        
+
         composed_message = "%s shared the following item with you!\nLink:%s"  % (username, file_path)
         em.send_email(composed_message, email)
         message = "You have shared %s with %s" % (item_id, target_username)
         return redirect(url_for('home'))
     elif user_exist == False:
-        error = "User not found."
-        return render_template('error.html', error="usernotfound")
+        return render_template('error.html', error="usernotfound", username=username)
     else:
-        error = "Something went wrong."
-        return render_template('error.html', error="generror")
+        return render_template('error.html', error="generror", username=username)
 
 @app.route('/share/<item_id>', methods=['GET','POST'])
 def share(item_id):
@@ -293,7 +289,7 @@ def share(item_id):
 		return redirect(url_for('home'))
 	else:
 		cur.close()
-		return render_template('error.html', error="share")
+		return render_template('error.html', error="share", username=session['username'])
 
 @app.route('/post', methods=['GET', 'POST'])
 @login_required
@@ -325,7 +321,7 @@ def add_friend(group_name):
             cursor.execute(alreadyMember, (target_username,username,target_group_name))
             if (cursor.fetchone()):
                     cursor.close()
-                    return render_template('error.html', error="alreadymember")
+                    return render_template('error.html', error="alreadymember", username=username)
             else:
                     inst = "INSERT INTO member VALUES (%s, %s, %s)"
                     cursor.execute(inst, (target_username, target_group_name, username))
@@ -333,7 +329,7 @@ def add_friend(group_name):
                     cursor.close()
                     return redirect(url_for('profile', username = username))
         else:
-            return render_template('error.html', error="usernotfound")
+            return render_template('error.html', error="usernotfound", username=username)
 
 def get_comments(item_id):
     inst = "SELECT comment_text, timest, first_name, last_name FROM (SELECT id, username, comment_text, timest, first_name, last_name FROM comment NATURAL JOIN person WHERE comment.username=person.username) as t1 WHERE id = %s ORDER BY timest"
@@ -402,7 +398,7 @@ def profile(username):
 	groupQuery = 'SELECT * FROM Member WHERE username = %s'
 	cur.execute(groupQuery, (username))
 	groupList = cur.fetchall()
-	postQuery = 'SELECT * FROM Content WHERE username = %s ORDER BY timest DESC'
+	postQuery = 'SELECT * FROM Content WHERE username = %s ORDER BY timest'
 	cur.execute(postQuery, (username))
 	userPosts = cur.fetchall()
 	personInfoQuery = 'SELECT first_name, last_name FROM Person WHERE username=%s'
@@ -422,7 +418,7 @@ def tag(item_id):
 		isTagged = cur.fetchone()
 		if (isTagged):
 			cur.close()
-			return render_template('error.html', error="alreadytagged")
+			return render_template('error.html', error="alreadytagged", username=tagger)
 		else:
 			addTag = 'INSERT INTO Tag (id,username_tagger,username_taggee) VALUES (%s, %s, %s)'
 			cur.execute(addTag, (item_id,tagger,taggee))
@@ -431,7 +427,7 @@ def tag(item_id):
 			return redirect(url_for('home'))
 	else:
 		cur.close()
-		return render_template('error.html', error="usernotfound")
+		return render_template('error.html', error="usernotfound", username=tagger)
 
 @app.route('/acceptTag/<int:item_id>', methods=['POST'])
 def acceptTag(item_id):

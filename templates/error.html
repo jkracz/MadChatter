@@ -28,5 +28,7 @@
 	{% if error == "alreadytagged" %}
 	<p>That user has already been tagged in this content item.</p>
 	{% endif %}
-	<a href="/home">Back to Home</a>
+	{% if error == "groupExists" %}
+	<p>A group by this name already exists.</p>
+	{% endif %}
 </body>
